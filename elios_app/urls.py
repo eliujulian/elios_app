@@ -21,7 +21,7 @@ from django import db
 def test_view(request):
     print(db.connections.databases)
     context = {}
-    context['data'] = db.connections.databases
+    # context['data'] = db.connections.databases
     return TemplateResponse(request, 'application/home_test.html', context)
 
 urlpatterns = [
