@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.template.response import TemplateResponse
-
+from django import db
 
 def test_view(request):
-    return TemplateResponse(request, 'application/home_test.html')
+    print(db.connections.databases)
+    context = {}
+    context['data'] = db.connections.databases
+    return TemplateResponse(request, 'application/home_test.html', context)
 
 urlpatterns = [
     path('', test_view),
