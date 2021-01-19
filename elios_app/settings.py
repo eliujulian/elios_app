@@ -27,10 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['SECRET_KEY_ELIOSAPP']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if str(BASE_DIR).startswith("C:\\Users"):  # Enable debug when run local
+    DEBUG = True
+else:  # Heroku
+    DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'elios-app.herokuapp.com']
-
 
 # Application definition
 
