@@ -1,0 +1,24 @@
+{% extends 'application/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <form action="{{ object.get_update_url }}" method="post">
+        {% csrf_token %}
+
+            {{ form.errors }}
+
+            <div class="grid-container-modal">
+
+                {% for field in form %}
+                    <div>{{ field.label_tag }}</div>
+                    <div>{{ field }}</div>
+                {% endfor %}
+
+                <div class="grid-item"><input type="submit" class="btn btn-primary" value="Save"></div>
+
+            </div>
+
+    </form>
+
+{% endblock %}

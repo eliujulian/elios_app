@@ -1,0 +1,28 @@
+{% extends 'application/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div>
+
+    <form action="{{ view.model.get_create_url }}" method="post">
+        {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div>
+
+                {% for field in form %}
+                    <div>{{ field.label_tag }} {{ field.errors }}</div>
+                    <div>{{ field }}</div>
+                {% endfor %}
+
+                <div><input type="submit" class="btn btn-primary" value="Save"></div>
+
+            </div>
+
+    </form>
+
+    </div>
+
+{% endblock %}
