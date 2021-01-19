@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+        }
+
+        .button {
+            margin-top: 10px;
+            border-radius: 10%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="grid-item"></div>
+
+    <div class="grid-item">
+
+        {% if form.errors %}
+            <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        <form action="{%  url 'login-url' %}" method="POST" class="text-center"> {% csrf_token %}
+
+            <div>
+                <label for="username">Username:</label>
+                    <div >
+                        <input type="text" name="username" autocomplete="on" id="username" class="form-control">
+                    </div>
+            </div>
+
+            <div>
+                <label for="password" >Password:</label>
+                <div>
+                    <input type="password" name="password" size="20" autocomplete="on" id="password" class="form-control">
+                </div>
+            </div>
+
+            <input type="hidden" name="next" value="/">
+
+            <div>
+                <div>
+                    <input class="button" type="submit" value="Login">
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+</div>
+
+</body>
+</html>

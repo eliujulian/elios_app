@@ -14,11 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import path, include
 from elios_app.views import *
 
 
 urlpatterns = [
-    path('', test_view),
-    path('admin/', admin.site.urls),
+    path("", login_required(test_view, login_url="login-url"), name="landingpage"),
+    path("login/", LoginView.as_view(template_name="application/login.html"), name="login-url"),
+    path("logout/", LogoutView.as_view(), name="logout-url"),
+    path("admin/", admin.site.urls),
 ]
