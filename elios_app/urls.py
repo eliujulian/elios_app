@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from django.template.response import TemplateResponse
 from django import db
+from elios_app import settings
+
 
 def test_view(request):
     print(db.connections.databases)
     context = {}
-    # context['data'] = db.connections.databases
+    context['data'] = settings.BASE_DIR
     return TemplateResponse(request, 'application/home_test.html', context)
 
 urlpatterns = [

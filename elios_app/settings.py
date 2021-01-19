@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import gunicorn
 import django_heroku
+from django import db
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ SECRET_KEY = os.environ['SECRET_KEY_ELIOSAPP']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'elios-app.heroku.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'elios-app.herokuapp.com']
 
 
 # Application definition
@@ -128,3 +129,6 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'core.User'
 
 django_heroku.settings(locals())
+
+print("Running with database: ", db.connections.databases['default']['HOST'])
+print("Basedir:", BASE_DIR)
