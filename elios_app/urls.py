@@ -15,16 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.template.response import TemplateResponse
-from django import db
-from elios_app import settings
+from elios_app.views import *
 
-
-def test_view(request):
-    print(db.connections.databases)
-    context = {}
-    context['data'] = settings.BASE_DIR
-    return TemplateResponse(request, 'application/home_test.html', context)
 
 urlpatterns = [
     path('', test_view),
