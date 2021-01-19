@@ -23,6 +23,6 @@ from elios_app.views import *
 urlpatterns = [
     path("", login_required(test_view, login_url="login-url"), name="landingpage"),
     path("login/", LoginView.as_view(template_name="application/login.html"), name="login-url"),
-    path("logout/", LogoutView.as_view(), name="logout-url"),
+    path("logout/", LogoutView.as_view(template_name="application/login.html"), name="logout-url"),
     path("admin/", admin.site.urls),
 ]
