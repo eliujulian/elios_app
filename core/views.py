@@ -2,6 +2,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
+from .models import *
 
 
 class CustomCreateView(CreateView):
@@ -33,3 +34,20 @@ class CustomListView(ListView):
 
 class CustomDeleteView(DeleteView):
     pass
+
+
+class UserDetailView(CustomDetailView):
+    model = User
+    template_name = "generic/generic_detail.html"
+    slug_field = "username"
+
+
+class UserUpdateView(CustomUpdateView):
+    model = User
+    template_name = "generic/generic_update.html"
+    slug_field = "username"
+
+class UserDeleteView(CustomDeleteView):
+    model = User
+    slug_field = "username"
+

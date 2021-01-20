@@ -18,11 +18,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path  # , include
 from elios_app.views import *
+from core.views import *
 
 
 urlpatterns = [
     path("", login_required(test_view, login_url="login-url"), name="landingpage"),
     path("login/", LoginView.as_view(template_name="application/login.html"), name="login-url"),
     path("logout/", LogoutView.as_view(template_name="application/login.html"), name="logout-url"),
+    path("user/<slug>/", login_required(UserDetailView.as_view()), name="user-detail"),
+    path("user/<slug>/update/", login_required(UserUpdateView.as_view()), name="user-update"),
+    path("user/<slug>/delete/", login_required(UserDeleteView.as_view()), name="user-delete"),
     path("admin/", admin.site.urls),
 ]
