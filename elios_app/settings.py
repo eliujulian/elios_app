@@ -61,8 +61,7 @@ ROOT_URLCONF = 'elios_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,5 +131,7 @@ AUTH_USER_MODEL = 'core.User'
 
 django_heroku.settings(locals())
 
-print("Running with database: ", db.connections.databases['default']['HOST'])
+print("Running with database - HOST/NAME: ",
+      db.connections.databases['default'].get('HOST'),
+      db.connections.databases['default'].get('NAME'))
 print("Basedir:", BASE_DIR)
