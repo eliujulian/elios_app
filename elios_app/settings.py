@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 import gunicorn
 import django_heroku
@@ -129,7 +130,8 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'core.User'
 
-django_heroku.settings(locals())
+if not "test" in sys.argv:  # No testing with live database, using sqlite when running tests
+    django_heroku.settings(locals())
 
 print("Running with database - HOST/NAME: ",
       db.connections.databases['default'].get('HOST'),
