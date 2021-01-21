@@ -26,7 +26,8 @@ urlpatterns = [
     path("login/", LoginView.as_view(template_name="application/login.html"), name="login-url"),
     path("logout/", LogoutView.as_view(template_name="application/login.html"), name="logout-url"),
     path("user/<slug>/", login_required(UserDetailView.as_view()), name="user-detail"),
-    path("user/<slug>/update/", login_required(UserUpdateView.as_view()), name="user-update"),
-    path("user/<slug>/delete/", login_required(UserDeleteView.as_view()), name="user-delete"),
+    path("account/<slug>/", login_required(AccountDetailView.as_view()), name="account-detail"),
+    path("account/<slug>/update/", login_required(AccountUpdateView.as_view()), name="account-update"),
+    path("account/<slug>/delete/", login_required(AccountDeleteView.as_view()), name="account-delete"),
     path("admin/", admin.site.urls),
 ]

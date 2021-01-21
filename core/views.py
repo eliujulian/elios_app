@@ -2,6 +2,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
+from django.http import HttpResponseForbidden, HttpResponse
 from .models import *
 
 
@@ -42,12 +43,25 @@ class UserDetailView(CustomDetailView):
     slug_field = "username"
 
 
-class UserUpdateView(CustomUpdateView):
+class AccountDetailView(CustomDetailView):
+    model = User
+    template_name = "generic/generic_detail.html"
+    slug_field = "username"
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != request.user:
+            return HttpResponse("Unauthorized", status=401)
+        else:
+            return super().get(request)
+
+
+class AccountUpdateView(CustomUpdateView):
     model = User
     template_name = "generic/generic_update.html"
     slug_field = "username"
 
-class UserDeleteView(CustomDeleteView):
+
+class AccountDeleteView(CustomDeleteView):
     model = User
     slug_field = "username"
-
