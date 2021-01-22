@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
 from django.http import HttpResponseForbidden, HttpResponse
 from .models import *
+from .forms import *
 
 
 class CustomCreateView(CreateView):
@@ -60,6 +61,7 @@ class AccountUpdateView(CustomUpdateView):
     model = User
     template_name = "generic/generic_update.html"
     slug_field = "username"
+    form_class = AccountUpdateForm
 
 
 class AccountDeleteView(CustomDeleteView):
