@@ -54,7 +54,7 @@ class AccountDetailView(CustomDetailView):
         if instance != request.user:
             return HttpResponse("Unauthorized", status=401)
         else:
-            return super().get(request)
+            return super().get(request, *args, **kwargs)
 
 
 class AccountUpdateView(CustomUpdateView):
@@ -62,6 +62,13 @@ class AccountUpdateView(CustomUpdateView):
     template_name = "generic/generic_update.html"
     slug_field = "username"
     form_class = AccountUpdateForm
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != request.user:
+            return HttpResponse("Unauthorized", status=401)
+        else:
+            return super().get(request, *args, **kwargs)
 
 
 class AccountDeleteView(CustomDeleteView):

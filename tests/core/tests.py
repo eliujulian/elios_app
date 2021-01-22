@@ -50,3 +50,21 @@ class AccountDetailViewTest(CreateUserMixin, TestCase):
         response = self.client.get(reverse("account-detail", kwargs={"slug": "adam"}))
         self.assertEqual(response.status_code, 302)
         self.assertIsInstance(response, HttpResponseRedirect)
+
+
+class AccountUpdateViewTest(CreateUserMixin, TestCase):
+    def test_get_response_status_same_user(self):
+        response = self.client.get(reverse("account-update", kwargs={"slug": "adam"}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, TemplateResponse)
+
+    def test_get_response_status_other_user(self):
+        response = self.client.get(reverse("account-update", kwargs={"slug": "bdam"}))
+        self.assertEqual(response.status_code, 401)
+        self.assertIsInstance(response, HttpResponse)
+
+    def test_get_response_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("account-update", kwargs={"slug": "adam"}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
