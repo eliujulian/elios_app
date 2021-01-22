@@ -1,11 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.shortcuts import reverse
 
 
 class User(AbstractUser):
     class Meta:
         ordering = ['id']
+
+    def get_absolute_url(self):
+        return reverse("account-detail", kwargs={"slug": self.username})
+
+    def get_delete_url(self):
+        return reverse("account-delete", kwargs={"slug": self.username})
 
     def __str__(self):
         if self.first_name and self.last_name:

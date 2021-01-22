@@ -70,7 +70,29 @@ class AccountUpdateView(CustomUpdateView):
         else:
             return super().get(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != request.user:
+            return HttpResponse("Unauthorized", status=401)
+        else:
+            return super().post(request, *args, **kwargs)
+
 
 class AccountDeleteView(CustomDeleteView):
     model = User
     slug_field = "username"
+    template_name = "generic/generic_confirm_delete.html"
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != request.user:
+            return HttpResponse("Unauthorized", status=401)
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != request.user:
+            return HttpResponse("Unauthorized", status=401)
+        else:
+            return super().post(request, *args, **kwargs)

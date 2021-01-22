@@ -1,0 +1,12 @@
+{% extends 'application/base.html' %}
+{% load static %}
+
+{% block content %}
+    
+<form method="post" action="{{ object.get_delete_url }}">
+    {% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm">
+</form>
+
+{% endblock %}
