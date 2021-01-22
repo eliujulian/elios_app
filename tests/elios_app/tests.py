@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.template.response import TemplateResponse
 from django.shortcuts import reverse
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from tests.texts_mixins import *
 
 
