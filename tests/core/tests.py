@@ -1,29 +1,8 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.template.response import TemplateResponse
 from django.shortcuts import reverse
-from django.http import HttpResponseRedirect, HttpResponse
-from core.models import User
-
-
-class CreateUserMixin:
-    def setUp(self):
-        self.client = Client()
-        self.user = User.objects.create_user("adam", "adam@adam.de", "123456")
-        self.user2 = User.objects.create_user("bdam", "adam@adam.de", "123456")
-        self.client.login(username="adam", password="123456")
-
-
-class LandingpageViewTest(CreateUserMixin, TestCase):
-    def test_get_response_status_logged_in(self):
-        response = self.client.get(reverse("landingpage"))
-        self.assertEqual(response.status_code, 200)
-        self.assertIsInstance(response, TemplateResponse)
-
-    def test_get_response_not_logged_in(self):
-        self.client.logout()
-        response = self.client.get(reverse("landingpage"))
-        self.assertEqual(response.status_code, 302)
-        self.assertIsInstance(response, HttpResponseRedirect)
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
+from tests.texts_mixins import *  # noqa
 
 
 class UserDetaiViewTest(CreateUserMixin, TestCase):
@@ -31,6 +10,11 @@ class UserDetaiViewTest(CreateUserMixin, TestCase):
         response = self.client.get(reverse("user-detail", kwargs={"slug": "adam"}))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
+
+    def test_post_response(self):
+        response = self.client.post(reverse("user-detail", kwargs={"slug": "adam"}))
+        self.assertEqual(response.status_code, 405)
+        self.assertIsInstance(response, HttpResponseNotAllowed)
 
     def test_get_response_status_other_user(self):
         response = self.client.get(reverse("user-detail", kwargs={"slug": "bdam"}))
@@ -49,6 +33,12 @@ class AccountDetailViewTest(CreateUserMixin, TestCase):
         response = self.client.get(reverse("account-detail", kwargs={"slug": "adam"}))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
+
+    def test_post_response_same_user(self):
+        response = self.client.post(reverse("account-detail", kwargs={"slug": "adam"}))
+        self.assertEqual(response.status_code, 405)
+        print(type(response))
+        self.assertIsInstance(response, HttpResponseNotAllowed)
 
     def test_get_response_status_other_user(self):
         response = self.client.get(reverse("account-detail", kwargs={"slug": "bdam"}))
