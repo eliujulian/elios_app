@@ -5,11 +5,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views import View
-from django.contrib.auth import authenticate
-from django.utils import timezone
 from django.shortcuts import redirect
-from django.http import HttpResponseForbidden, HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
-from .models import *
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, Http404, HttpResponseNotFound
 from .forms import *
 
 
@@ -48,6 +45,13 @@ class UserDetailView(CustomDetailView):
     model = User
     template_name = "generic/generic_detail.html"
     slug_field = "username"
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance.is_active:
+            return HttpResponseNotFound("Not found.")
+        else:
+            return super().get(request, *args, **kwargs)
 
 
 class MessageView(TemplateView):
