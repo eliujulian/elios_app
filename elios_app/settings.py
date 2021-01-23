@@ -148,3 +148,10 @@ print("Running with database - HOST/NAME: ",
       db.connections.databases['default'].get('HOST'),
       db.connections.databases['default'].get('NAME'))
 print("Basedir:", BASE_DIR)
+
+# App Dashboard
+
+ALLOW_SENDING_CONFIRMATION_EMAILS = True
+
+if not ALLOW_SENDING_CONFIRMATION_EMAILS:
+    print("WARNING: No sending of confirmation E-Mails")

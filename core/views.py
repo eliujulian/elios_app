@@ -8,6 +8,7 @@ from django.views import View
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponseNotFound
 from .forms import *
+from elios_app import settings
 
 
 class CustomCreateView(CreateView):
@@ -75,17 +76,25 @@ class AccountRegisterView(CreateView):
         self.object.set_password(raw_password=form.data['password'])
         self.object.save()
         confirm_url = self.object.get_confirm_url()
-        self.object.send_email_to_user(
-            subject="Please confirm your account",
-            message=f"Hello {self.object}, \n please copy&paste the following link "
-                    f"to your browser to confirm your account. \n {confirm_url}",
-        )
+
+        if settings.ALLOW_SENDING_CONFIRMATION_EMAILS:
+            self.object.send_email_to_user(
+                subject="Please confirm your account",
+                message=f"Hello {self.object}, \n please copy&paste the following link "
+                        f"to your browser to confirm your account. \n {confirm_url}",
+            )
+        else:
+            print("Warning: E-Mail was not send.")
 
         return super().form_valid(form)
 
     def get_success_url(self):
         url = reverse("message-success-public")
-        return url + "?message='You created a new account. Check your E-Mail for further details an confirmation.'"
+        if settings.ALLOW_SENDING_CONFIRMATION_EMAILS:
+            url += "?message='You created a new account. Check your E-Mail for further details an confirmation.'"
+        else:
+            url += "?message='You created a new account. Account validation is temporarily suspended."
+        return url
 
 
 class AccountConfirmEMailView(View):
