@@ -48,7 +48,6 @@ class AccountDetailViewTest(CreateUserMixin, TestCase):
     def test_post_response_same_user(self):
         response = self.client.post(reverse("account-detail", kwargs={"slug": "adam"}))
         self.assertEqual(response.status_code, 405)
-        print(type(response))
         self.assertIsInstance(response, HttpResponseNotAllowed)
 
     def test_get_response_status_other_user(self):
