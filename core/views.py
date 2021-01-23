@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views import View
 from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, Http404, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponseNotFound
 from .forms import *
 
 
@@ -74,6 +74,13 @@ class AccountRegisterView(CreateView):
         self.object.is_active = False
         self.object.set_password(raw_password=form.data['password'])
         self.object.save()
+        confirm_url = self.object.get_confirm_url()
+        self.object.send_email_to_user(
+            subject="Please confirm your account",
+            message=f"Hello {self.object}, \n please copy&paste the following link "
+                    f"to your browser to confirm your account. \n {confirm_url}",
+        )
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -98,7 +105,7 @@ class AccountConfirmEMailView(View):
                     return redirect(url)
 
         url = reverse("message-failure-public")
-        url += "?message=Confirmation not successfull."
+        url += "?message=Confirmation not successful."
         return HttpResponseRedirect(url)
 
     def post(self, request):

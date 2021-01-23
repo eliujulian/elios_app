@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.shortcuts import reverse
+from django.core.mail import send_mail
+from elios_app import settings
 
 
 class User(AbstractUser):
@@ -10,6 +12,25 @@ class User(AbstractUser):
 
     email_confirm_secret = models.CharField(max_length=24, default="")
     email_confirmed = models.BooleanField(default=False)
+
+    def send_email_to_user(self, subject, message):
+        subject = subject
+        message = message
+        email = self.email
+        send_mail(
+            subject,
+            message,
+            'elevate@eliu.de',
+            [email],
+            fail_silently=False,
+        )
+        return None
+
+    def get_confirm_url(self):
+        confirm_url = settings.BASE_URL
+        confirm_url += reverse("account-confirm")
+        confirm_url += f"?username={self.username}&confirmation_code={self.email_confirm_secret}"
+        return confirm_url
 
     def get_absolute_url(self):
         return reverse("account-detail", kwargs={"slug": self.username})

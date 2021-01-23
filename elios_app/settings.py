@@ -30,8 +30,10 @@ SECRET_KEY = os.environ['SECRET_KEY_ELIOSAPP']
 # SECURITY WARNING: don't run with debug turned on in production!
 if str(BASE_DIR).startswith("C:\\Users"):  # Enable debug when run local
     DEBUG = True
+    BASE_URL = "http://127.0.0.1:8000"
 else:  # Heroku
     DEBUG = False
+    BASE_URL = "http://elios-app.herokuapp.com"
 
 ALLOWED_HOSTS = ['127.0.0.1', 'elios-app.herokuapp.com']
 
@@ -130,8 +132,17 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'core.User'
 
+# E-Mail Settings
+EMAIL_HOST = os.environ['ELIOSAPP_EMAIL_HOST']
+EMAIL_HOST_PASSWORD = os.environ['ELIOSAPP_EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = os.environ['ELIOSAPP_EMAIL_HOST_USER']
+MAIL_PORT = 25
+EMAIL_SUBJECT_PREFIX = ""
+
+
 if not "test" in sys.argv:  # No testing with live database, using sqlite when running tests
-    django_heroku.settings(locals())
+    # django_heroku.settings(locals())
+    pass
 
 print("Running with database - HOST/NAME: ",
       db.connections.databases['default'].get('HOST'),
