@@ -8,6 +8,9 @@ class User(AbstractUser):
     class Meta:
         ordering = ['id']
 
+    email_confirm_secret = models.CharField(max_length=24, default="")
+    email_confirmed = models.BooleanField(default=False)
+
     def get_absolute_url(self):
         return reverse("account-detail", kwargs={"slug": self.username})
 

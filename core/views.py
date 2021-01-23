@@ -1,8 +1,14 @@
+import random
+import string
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView
+from django.views import View
+from django.contrib.auth import authenticate
 from django.utils import timezone
-from django.http import HttpResponseForbidden, HttpResponse
+from django.shortcuts import redirect
+from django.http import HttpResponseForbidden, HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from .models import *
 from .forms import *
 
@@ -42,6 +48,57 @@ class UserDetailView(CustomDetailView):
     model = User
     template_name = "generic/generic_detail.html"
     slug_field = "username"
+
+
+class MessageView(TemplateView):
+    template_name = "generic/generic_message_page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['message'] = self.request.GET.get("message")
+        return context
+
+
+class AccountRegisterView(CreateView):
+    model = User
+    template_name = "generic/generic_create.html"
+    form_class = AccountRegisterForm
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        self.object.email_confirm_secret = ''.join(random.choices(string.ascii_uppercase + string.digits, k=24))
+        self.object.is_active = False
+        self.object.set_password(raw_password=form.data['password'])
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        url = reverse("message-success-public")
+        return url + "?message='You created a new account. Check your E-Mail for further details an confirmation.'"
+
+
+class AccountConfirmEMailView(View):
+    def get(self, request):
+        username = self.request.GET.get("username")
+        confirmation_code = self.request.GET.get("confirmation_code")
+
+        if username and confirmation_code:
+            user = User.objects.filter(username=username).first()
+            if user:
+                if user.email_confirm_secret == confirmation_code:
+                    user.is_active = True
+                    user.email_confirmed = True
+                    user.save()
+                    url = reverse("message-success-public")
+                    url += "?message=E-Mail confirmed. Welcome! You can use the App now!"
+                    return redirect(url)
+
+        url = reverse("message-failure-public")
+        url += "?message=Confirmation not successfull."
+        return HttpResponseRedirect(url)
+
+    def post(self, request):
+        return HttpResponseNotAllowed(["get"])
 
 
 class AccountDetailView(CustomDetailView):

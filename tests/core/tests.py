@@ -22,6 +22,16 @@ class UserDetaiViewTest(CreateUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
 
+    def test_get_response_user_not_existing(self):
+        response = self.client.get(reverse("user-detail", kwargs={"slug": "abc"}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_response_status_other_user_inactive_account(self):
+        self.user2.is_active = False
+        self.user2.save()
+        response = self.client.get(reverse("user-detail", kwargs={"slug": "bdam"}))
+        self.assertEqual(response.status_code, 404)
+
     def test_get_response_not_logged_in(self):
         self.client.logout()
         response = self.client.get(reverse("user-detail", kwargs={"slug": "adam"}))

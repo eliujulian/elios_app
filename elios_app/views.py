@@ -1,6 +1,7 @@
 from django.template.response import TemplateResponse
 from django.http import HttpResponseNotAllowed
 
+
 def test_view(request):
     context = dict()
     context['data'] = None
