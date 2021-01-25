@@ -119,7 +119,6 @@ class AccountDeleteViewTest(CreateUserMixin, TestCase):
         self.assertEqual(response.status_code, 401)
         self.assertIsInstance(response, HttpResponse)
 
-
     def test_get_response_not_logged_in(self):
         self.client.logout()
         response = self.client.get(reverse("account-delete", kwargs={"slug": "adam"}))
@@ -138,3 +137,12 @@ class AccountDeleteViewTest(CreateUserMixin, TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertIn("login", response.url)
+
+    def test_post_response_correct_user(self):
+        self.assertTrue(User.objects.get(username="adam").is_authenticated)
+        response = self.client.post(reverse("account-delete", kwargs={"slug": "adam"}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertFalse(User.objects.get(username="adam").is_active)
+        self.assertEqual(self.client.get(reverse("landingpage")).status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)

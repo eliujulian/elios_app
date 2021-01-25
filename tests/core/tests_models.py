@@ -9,3 +9,4 @@ class UserModelTest(TestCase):
         user = User.objects.get(username="adam")
         self.assertIn("127.0.0.1", user.get_confirm_url())
         self.assertIn("adam", user.get_confirm_url())
+        self.assertIn(user.email_confirm_secret, user.get_confirm_url())

@@ -1,5 +1,6 @@
 import random
 import string
+import datetime
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -7,6 +8,7 @@ from django.views.generic import TemplateView
 from django.views import View
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponseNotFound
+from django.contrib.auth import logout
 from .forms import *
 from elios_app import settings
 
@@ -160,6 +162,11 @@ class AccountDeleteView(CustomDeleteView):
     slug_field = "username"
     template_name = "generic/generic_confirm_delete.html"
 
+    def get_success_url(self):
+        instance = self.object
+        message = f"{instance} was deleted."
+        return reverse("message-success-public") + f"?message={message}"
+
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance != request.user:
@@ -173,3 +180,12 @@ class AccountDeleteView(CustomDeleteView):
             return HttpResponse("Unauthorized", status=401)
         else:
             return super().post(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.is_active = False
+        self.object.date_deleted = datetime.datetime.today()
+        self.object.save()
+        logout(request)
+        return HttpResponseRedirect(success_url)
