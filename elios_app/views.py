@@ -4,7 +4,7 @@ from django.http import HttpResponseNotAllowed
 
 def test_view(request):
     context = dict()
-    context['data'] = None
+    context['data'] = f"You are logged in as {request.user} ({request.user.username})."
 
     if request.method == "POST":
         return HttpResponseNotAllowed("get")
