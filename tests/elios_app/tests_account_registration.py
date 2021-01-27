@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.shortcuts import reverse
 from django.http import HttpResponseRedirect
 from tests.texts_mixins import *
+from core.views import AccountRegisterView
 
 
 class AccountRegisterViewTest(TestCase):
@@ -34,6 +35,26 @@ class AccountRegisterViewTest(TestCase):
         self.assertEqual(third_response.status_code, 302)
         self.assertIsInstance(third_response, HttpResponseRedirect)
         self.assertNotIn("login", third_response.url)
+
+    def test_duplicate_username(self):
+        self.assertEqual(0, User.objects.filter(username="Adam").count())
+        username = "Adam"
+        password = "123456"
+        data = {"username": username, "first_name": "Adam", "last_name": "Test", "password": password}
+        response = self.client.post(reverse("account-register"), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(1, User.objects.filter(username="Adam").count())
+        response = self.client.post(reverse("account-register"), data=data)
+        self.assertIsInstance(response.context_data['view'], AccountRegisterView)
+        self.assertFalse(response.context_data['form'].is_valid())
+        self.assertEqual(1, User.objects.filter(username="Adam").count())
+
+    def test_username_to_short(self):
+        username = "a"
+        password = "123456"
+        data = {"username": username, "first_name": "Adam", "last_name": "Test", "password": password}
+        response = self.client.post(reverse("account-register"), data=data)
+        self.assertFalse(response.context_data['form'].is_valid())
 
 
 class AccountConfirmationViewTest(TestCase):
