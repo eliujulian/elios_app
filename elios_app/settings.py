@@ -142,7 +142,7 @@ MAIL_PORT = 25
 EMAIL_SUBJECT_PREFIX = ""
 
 
-if not "test" in sys.argv:  # No testing with live database, using sqlite when running tests
+if "test" not in sys.argv:  # No testing with live database, using sqlite when running tests
     django_heroku.settings(locals())
     pass
 
