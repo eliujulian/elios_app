@@ -31,7 +31,7 @@ if str(BASE_DIR).startswith("C:\\Users"):  # Enable debug when run local
     DEBUG = True
     BASE_URL = "http://127.0.0.1:8000"
 else:  # Heroku
-    DEBUG = True
+    DEBUG = False
     BASE_URL = "http://elios-app.herokuapp.com"
 
 ALLOWED_HOSTS = ['127.0.0.1', 'elios-app.herokuapp.com']
