@@ -1,0 +1,15 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-body">
+                <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+
+                {{ object.about_you|linebreaks }}
+            </div>
+        </div>
+
+{% endblock %}

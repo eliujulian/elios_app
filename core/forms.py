@@ -28,4 +28,8 @@ class AccountUpdateForm(ModelForm):
         fields = [
             "first_name",
             "last_name",
+            "about_you"
         ]
+        labels = {
+            "about_you": "Tell us something about you. Every user can see this."
+        }

@@ -46,7 +46,7 @@ class CustomDeleteView(DeleteView):
 
 class UserDetailView(CustomDetailView):
     model = User
-    template_name = "generic/generic_detail.html"
+    template_name = "user/user_detail.html"
     slug_field = "username"
 
     def get(self, request, *args, **kwargs):
