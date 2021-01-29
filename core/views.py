@@ -85,6 +85,8 @@ class AccountRegisterView(CreateView):
                 message=f"Hello {self.object}, \n please copy&paste the following link "
                         f"to your browser to confirm your account. \n {confirm_url}",
             )
+            self.object.timestamp_confirmation_code_send = timezone.now()
+            self.object.save()
         else:
             print("Warning: E-Mail was not send.")
 

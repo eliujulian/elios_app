@@ -12,6 +12,7 @@ class User(AbstractUser):
 
     email_confirm_secret = models.CharField(max_length=24, default="")
     email_confirmed = models.BooleanField(default=False)
+    timestamp_confirmation_code_send = models.DateTimeField(null=True, blank=True)
     date_deleted = models.DateField(null=True, blank=True)
 
     def send_email_to_user(self, subject, message):
