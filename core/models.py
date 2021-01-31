@@ -85,3 +85,17 @@ class AbstractNoteModel(AbstractBaseModel):
 
     def __str__(self):
         return self.title
+
+
+class PermissionRegister(models.Model):
+    """
+    Use this Model to register any not directly Model related permissions
+    https://stackoverflow.com/questions/13932774/
+    how-can-i-use-django-permissions-without-defining-a-content-type-or-model
+    """
+    class Meta:
+        managed = False  # no table will be created
+        default_permissions = ()  # disable default permissions
+        permissions = (
+            ('landingpage_right', 'Right to view landingpage'),
+        )
