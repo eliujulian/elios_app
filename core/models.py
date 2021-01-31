@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.shortcuts import reverse
 from django.core.mail import send_mail
 from elios_app import settings
+from core.definitions import SPHERE_OF_LIFE_DE
 
 
 class User(AbstractUser):
@@ -72,3 +73,15 @@ class AbstractBaseModel(models.Model):
 
     def get_create_url(self):
         raise Exception("Improperly configured, please configure get_create_url function.")
+
+
+class AbstractNoteModel(AbstractBaseModel):
+    class Meta:
+        abstract = True
+
+    title = models.CharField(max_length=160)
+    description = models.TextField(blank=True, null=True)
+    sphere = models.IntegerField(choices=SPHERE_OF_LIFE_DE, default=8)
+
+    def __str__(self):
+        return self.title
