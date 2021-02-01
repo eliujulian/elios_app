@@ -9,6 +9,8 @@ from django.views import View
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth import logout
+from django.contrib.auth.models import Permission, Group
+from django.contrib.contenttypes.models import ContentType
 from .forms import *
 from elios_app import settings
 
@@ -77,6 +79,16 @@ class AccountRegisterView(CreateView):
         self.object.is_active = False
         self.object.set_password(raw_password=form.data['password'])
         self.object.save()
+
+        # Create Standard Group if not exisiting in DB and grant landingpage right
+        if Group.objects.filter(name="StandardUsers").count() == 0:
+            perm = Permission.objects.get(content_type=ContentType.objects.get_for_model(PermissionRegister))
+            group = Group.objects.create(**{'name': "StandardUsers"})
+            group.permissions.add(perm)
+
+        # add for all new users to group "standard-users
+        Group.objects.get(name= "StandardUsers").user_set.add(self.object)
+
         confirm_url = self.object.get_confirm_url()
 
         if settings.ALLOW_SENDING_CONFIRMATION_EMAILS:
