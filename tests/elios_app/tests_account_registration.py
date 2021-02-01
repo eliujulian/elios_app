@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.shortcuts import reverse
+from django.shortcuts import reverse, get_object_or_404
 from django.http import HttpResponseRedirect
 from tests.texts_mixins import *
 from core.views import AccountRegisterView
@@ -21,7 +21,7 @@ class AccountRegisterViewTest(TestCase):
         self.assertIn("message", response.url)
         self.assertTrue(new_user.check_password(password))
 
-        # Try login for not confirmed user -> should not word
+        # Try login for not confirmed user -> should not work
         new_response = self.client.post(reverse("login-url"), {"username": username, "password": password})
         self.assertEqual(self.client.get(reverse("landingpage")).status_code, 302)
         self.assertFalse(new_response.context['request'].user.is_authenticated)
@@ -35,6 +35,11 @@ class AccountRegisterViewTest(TestCase):
         self.assertEqual(third_response.status_code, 302)
         self.assertIsInstance(third_response, HttpResponseRedirect)
         self.assertNotIn("login", third_response.url)
+
+        # landingpage
+        fourth_response = self.client.get(reverse("landingpage"))
+        self.assertEqual(fourth_response.status_code, 200)
+        self.assertTrue(User.objects.get(username="Adam").has_perm('core.landingpage_right'))
 
     def test_duplicate_username(self):
         self.assertEqual(0, User.objects.filter(username="Adam").count())
@@ -55,6 +60,26 @@ class AccountRegisterViewTest(TestCase):
         data = {"username": username, "first_name": "Adam", "last_name": "Test", "password": password}
         response = self.client.post(reverse("account-register"), data=data)
         self.assertFalse(response.context_data['form'].is_valid())
+
+
+class AccountPermissionAddingTest(TestCase):
+    def test_new_user_gains_perms(self):
+        User.objects.create_user("adam", "adam@adam.de", "123456")
+        user = get_object_or_404(User, username="adam")
+
+        # any permission check will cache the current set of permissions
+        user.has_perm('core.add_user')
+
+        content_type = ContentType.objects.get_for_model(PermissionRegister)
+        permission = Permission.objects.get(
+            codename='landingpage_right',
+            content_type=content_type,
+        )
+        user.user_permissions.add(permission)
+
+        self.assertFalse(user.has_perm('core.landingpage_right'))  # Checking the cached permission set
+        user = User.objects.get(username="adam")
+        self.assertTrue(user.has_perm('core.landingpage_right'))
 
 
 class AccountConfirmationViewTest(TestCase):
