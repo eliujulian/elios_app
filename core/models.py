@@ -92,6 +92,9 @@ class PermissionRegister(models.Model):
     Use this Model to register any not directly Model related permissions
     https://stackoverflow.com/questions/13932774/
     how-can-i-use-django-permissions-without-defining-a-content-type-or-model
+
+    Permissions will stay in db one registered, even after removing from permissions list.
+
     """
     class Meta:
         managed = False  # no table will be created

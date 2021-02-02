@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedire
 from django.contrib.auth import logout
 from django.contrib.auth.models import Permission, Group
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .forms import *
 from elios_app import settings
 
@@ -46,10 +47,11 @@ class CustomDeleteView(DeleteView):
     pass
 
 
-class UserDetailView(CustomDetailView):
+class UserDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
     template_name = "user/user_detail.html"
     slug_field = "username"
+    permission_required = 'core.landingpage_right'
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -137,10 +139,11 @@ class AccountConfirmEMailView(View):
         return HttpResponseNotAllowed(["get"])
 
 
-class AccountDetailView(CustomDetailView):
+class AccountDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
     template_name = "generic/generic_detail.html"
     slug_field = "username"
+    permission_required = 'core.landingpage_right'
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -150,11 +153,12 @@ class AccountDetailView(CustomDetailView):
             return super().get(request, *args, **kwargs)
 
 
-class AccountUpdateView(CustomUpdateView):
+class AccountUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = User
     template_name = "generic/generic_update.html"
     slug_field = "username"
     form_class = AccountUpdateForm
+    permission_required = 'core.landingpage_right'
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -171,10 +175,11 @@ class AccountUpdateView(CustomUpdateView):
             return super().post(request, *args, **kwargs)
 
 
-class AccountDeleteView(CustomDeleteView):
+class AccountDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = User
     slug_field = "username"
     template_name = "generic/generic_confirm_delete.html"
+    permission_required = 'core.landingpage_right'
 
     def get_success_url(self):
         instance = self.object
