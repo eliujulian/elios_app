@@ -146,7 +146,7 @@ EMAIL_SUBJECT_PREFIX = ""
 
 
 if "test" not in sys.argv:  # No testing with live database, using sqlite when running tests
-    django_heroku.settings(locals())
+    django_heroku.settings(locals())  # Comment out to use local sqlite3.db
     pass
 
 print("Running with database - HOST/NAME: ",
