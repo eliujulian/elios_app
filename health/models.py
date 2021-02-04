@@ -1,7 +1,8 @@
 import datetime
 from django.db import models
-from core.models import AbstractBaseModel
+from django.shortcuts import reverse
 from django.utils import timezone
+from core.models import AbstractBaseModel
 
 
 class Weight(AbstractBaseModel):
@@ -42,6 +43,12 @@ class Weight(AbstractBaseModel):
                                                                         timezone.now().month,
                                                                         timezone.now().day))
         return round(sum([n.weight for n in data]) / data.count(), 1)
+
+    def get_absolute_url(self):
+        return reverse("health-weight-detail", kwargs={"pk": self.id})
+
+    def get_update_url(self):
+        return reverse("health-weight-update", kwargs={"pk": self.id})
 
     def __str__(self):
         return str(self.measurement_date.strftime("%d.%m.%Y")) + ": " + str(self.weight)

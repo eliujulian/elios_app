@@ -19,6 +19,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path  # , include
 from elios_app.views import *
 from core.views import *
+from health.views import *
 
 
 urlpatterns = [
@@ -34,4 +35,8 @@ urlpatterns = [
     path("account/<slug>/update/", login_required(AccountUpdateView.as_view()), name="account-update"),
     path("account/<slug>/delete/", login_required(AccountDeleteView.as_view()), name="account-delete"),
     path("admin/", admin.site.urls),
+    path("health/weight/", login_required(WeightListView.as_view()), name="health-weight"),
+    path("health/weight/<int:pk>/", login_required(WeightDetailView.as_view()), name="health-weight-detail"),
+    path("health/weight/<int:pk>/update/", login_required(WeightDetailView.as_view()), name="health-weight-update"),
+
 ]
