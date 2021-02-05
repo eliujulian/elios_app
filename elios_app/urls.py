@@ -36,6 +36,7 @@ urlpatterns = [
     path("account/<slug>/delete/", login_required(AccountDeleteView.as_view()), name="account-delete"),
     path("admin/", admin.site.urls),
     path("health/weight/", login_required(WeightListView.as_view()), name="health-weight"),
+    path("health/weight/create/", login_required(WeightCreateView.as_view()), name="health-weight-create"),
     path("health/weight/<int:pk>/", login_required(WeightDetailView.as_view()), name="health-weight-detail"),
     path("health/weight/<int:pk>/update/", login_required(WeightDetailView.as_view()), name="health-weight-update"),
 

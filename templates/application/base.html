@@ -14,6 +14,12 @@
 <div class="card">
     {% block content %}
         {{ data }}
+
+        <h1>Navigation</h1>
+
+        <a href="{% url 'health-weight' %}">Gewicht Liste</a>
+        <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>
+
         <video autoplay loop muted>
           <source src="{% static 'aRP1Gr7_460sv.mp4' %}" type="video/mp4">
             Your browser does not support the video tag.

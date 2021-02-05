@@ -17,6 +17,8 @@ from elios_app import settings
 
 
 class CustomCreateView(CreateView):
+    template_name = "generic/generic_create.html"
+
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.timestamp_created = timezone.now()
@@ -32,19 +34,19 @@ class CustomCreateView(CreateView):
 
 
 class CustomDetailView(DetailView):
-    pass
+    template_name = "generic/generic_detail.html"
 
 
 class CustomUpdateView(UpdateView):
-    pass
+    template_name = "generic/generic_update.html"
 
 
 class CustomListView(ListView):
-    pass
+    template_name = "generic/generic_list.html"
 
 
 class CustomDeleteView(DeleteView):
-    pass
+    template_name = "generic/generic_confirm_delete.html"
 
 
 class UserDetailView(PermissionRequiredMixin, CustomDetailView):
@@ -141,7 +143,6 @@ class AccountConfirmEMailView(View):
 
 class AccountDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
-    template_name = "generic/generic_detail.html"
     slug_field = "username"
     permission_required = 'core.landingpage_right'
 
@@ -155,7 +156,6 @@ class AccountDetailView(PermissionRequiredMixin, CustomDetailView):
 
 class AccountUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = User
-    template_name = "generic/generic_update.html"
     slug_field = "username"
     form_class = AccountUpdateForm
     permission_required = 'core.landingpage_right'
@@ -178,7 +178,6 @@ class AccountUpdateView(PermissionRequiredMixin, CustomUpdateView):
 class AccountDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = User
     slug_field = "username"
-    template_name = "generic/generic_confirm_delete.html"
     permission_required = 'core.landingpage_right'
 
     def get_success_url(self):
