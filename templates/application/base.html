@@ -7,6 +7,7 @@
     <title>eliOS App elevate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <script src="https://kit.fontawesome.com/60a7f83830.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -17,13 +18,17 @@
 
         <h1>Navigation</h1>
 
-        <a href="{% url 'health-weight' %}">Gewicht Liste</a>
-        <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>
+        {% if perms.health.health_app %}
+            <a href="{% url 'health-weight' %}">Gewicht Liste</a>
+            <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>
+        {% endif %}
 
-        <video autoplay loop muted>
-          <source src="{% static 'aRP1Gr7_460sv.mp4' %}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+        <div class="text-center">
+            <video width="320" autoplay loop muted>
+                <source src="{% static 'aRP1Gr7_460sv.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+            </video>
+        </div>
     {% endblock content %}
 </div>
 
