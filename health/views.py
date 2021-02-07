@@ -1,23 +1,28 @@
 from django.http import HttpResponse
-from core.views import CustomListView, CustomDetailView, CustomCreateView, CustomUpdateView
+from django.shortcuts import reverse
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from core.views import CustomListView, CustomDetailView, CustomCreateView, CustomUpdateView, CustomDeleteView
 from health.models import Weight
 from health.forms import WeightForm
 
 
-class WeightCreateView(CustomCreateView):
+class WeightCreateView(PermissionRequiredMixin, CustomCreateView):
     model = Weight
     form_class = WeightForm
+    permission_required = 'core.health_app'
 
 
-class WeightListView(CustomListView):
+class WeightListView(PermissionRequiredMixin, CustomListView):
     model = Weight
+    permission_required = 'core.health_app'
 
     def get_queryset(self):
         return Weight.objects.filter(created_by=self.request.user)
 
 
-class WeightDetailView(CustomDetailView):
+class WeightDetailView(PermissionRequiredMixin, CustomDetailView):
     model = Weight
+    permission_required = 'core.health_app'
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -26,6 +31,17 @@ class WeightDetailView(CustomDetailView):
         return super().get(request, *args, **kwargs)
 
 
-class WeightUpdateView(CustomUpdateView):
+class WeightUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = Weight
     form_class = WeightForm
+    permission_required = 'core.health_app'
+
+
+class WeightDeleteView(PermissionRequiredMixin, CustomDeleteView):
+    model = Weight
+    permission_required = 'core.health_app'
+
+    def get_success_url(self):
+        instance = self.object
+        message = f"{instance} was deleted."
+        return reverse("message-success-public") + f"?message={message}"

@@ -50,5 +50,8 @@ class Weight(AbstractBaseModel):
     def get_update_url(self):
         return reverse("health-weight-update", kwargs={"pk": self.id})
 
+    def get_create_url(self):
+        return reverse("health-weight-create")
+
     def __str__(self):
         return str(self.measurement_date.strftime("%d.%m.%Y")) + ": " + str(self.weight)
