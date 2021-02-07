@@ -156,7 +156,6 @@ print("Running with database - HOST/NAME: ",
 print("Basedir:", BASE_DIR)
 
 # App Dashboard
-
 ALLOW_SENDING_CONFIRMATION_EMAILS = True
 
 if not ALLOW_SENDING_CONFIRMATION_EMAILS:

@@ -84,12 +84,6 @@ class AccountRegisterView(CreateView):
         self.object.set_password(raw_password=form.data['password'])
         self.object.save()
 
-        # Create Standard Group if not exisiting in DB and grant landingpage right
-        if Group.objects.filter(name="StandardUsers").count() == 0:
-            perm = Permission.objects.get(content_type=ContentType.objects.get_for_model(PermissionRegister))
-            group = Group.objects.create(**{'name': "StandardUsers"})
-            group.permissions.add(perm)
-
         # add for all new users to group "standard-users
         Group.objects.get(name= "StandardUsers").user_set.add(self.object)
 
