@@ -101,4 +101,5 @@ class PermissionRegister(models.Model):
         default_permissions = ()  # disable default permissions
         permissions = (
             ('landingpage_right', 'Right to view landingpage'),
+            ('health_app', 'Right to user Health App'),
         )
