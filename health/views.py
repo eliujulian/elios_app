@@ -36,6 +36,18 @@ class WeightUpdateView(PermissionRequiredMixin, CustomUpdateView):
     form_class = WeightForm
     permission_required = 'core.health_app'
 
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user != instance.created_by:
+            return HttpResponse("Unauthorized", status=401)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user != instance.created_by:
+            return HttpResponse("Unauthorized", status=401)
+        return super().post(request, *args, **kwargs)
+
 
 class WeightDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = Weight

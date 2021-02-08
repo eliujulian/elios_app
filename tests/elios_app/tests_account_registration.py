@@ -5,7 +5,7 @@ from tests.texts_mixins import *
 from core.views import AccountRegisterView
 
 
-class AccountRegisterViewTest(TestCase):
+class AccountRegisterViewTest(CreateStandardGroupsMixin, TestCase):
     def test_create_new_user(self):
         username = "Adam"
         password = "123456"
@@ -82,7 +82,7 @@ class AccountPermissionAddingTest(TestCase):
         self.assertTrue(user.has_perm('core.landingpage_right'))
 
 
-class AccountConfirmationViewTest(TestCase):
+class AccountConfirmationViewTest(CreateStandardGroupsMixin, TestCase):
     def test_new_user(self):
         username = "Adam"
         password = "123456"

@@ -2,13 +2,40 @@ import datetime
 from django.utils import timezone
 from django.test import TestCase
 from django.template.response import TemplateResponse
-from django.shortcuts import reverse
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect
 from tests.texts_mixins import *
 from health.views import *
 
 
-class WeightListTest(CreateUserMixin, TestCase):
+class WeightClassTests(CreateUserMixin, TestCase):
+    def setUp(self):
+        super().setUp()
+        data = {
+            'created_by': self.user,
+            'timestamp_created': timezone.now(),
+            'timestamp_changed': timezone.now(),
+            'weight': 80.8,
+            'measurement_date': datetime.date(2020, 1, 1)
+        }
+        Weight.objects.create(**data)
+        data = {
+            'created_by': self.user2,
+            'timestamp_created': timezone.now(),
+            'timestamp_changed': timezone.now(),
+            'weight': 80.8,
+            'measurement_date': datetime.date(2020, 1, 1)
+        }
+        Weight.objects.create(**data)
+
+
+class WeightListTest(WeightClassTests):
+    def test_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("health-weight"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn("login", response.url)
+
     def test_response(self):
         response = self.client.get(reverse("health-weight"))
         self.assertEqual(response.status_code, 200)
@@ -21,14 +48,6 @@ class WeightListTest(CreateUserMixin, TestCase):
         self.assertIsInstance(response, HttpResponseRedirect)
 
     def test_with_data(self):
-        data = {
-            'created_by': self.user,
-            'timestamp_created': timezone.now(),
-            'timestamp_changed': timezone.now(),
-            'weight': 80.8,
-            'measurement_date': datetime.date(2020, 1, 1)
-        }
-        Weight.objects.create(**data)
         response = self.client.get(reverse("health-weight"))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
@@ -38,6 +57,37 @@ class WeightListTest(CreateUserMixin, TestCase):
         response = self.client.get(reverse("health-weight"))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
-        self.assertEqual(response.context_data['object_list'].count(), 0)
+        self.assertEqual(response.context_data['object_list'].count(), 1)
 
 
+class WeightDetailViewTest(WeightClassTests):
+    def test_response_detail_view_get(self):
+        response = self.client.get(reverse("health-weight-detail", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, TemplateResponse)
+
+    def test_response_detail_view_post(self):
+        response = self.client.post(reverse("health-weight-detail", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 405)
+
+    def test_response_user2_detail_view(self):
+        self.client.logout()
+        self.client.login(username="bdam", password="123456")
+        response = self.client.get(reverse("health-weight-detail", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 401)
+
+
+class WeightUpdateViewTest(WeightClassTests):
+    def test_response_user_update_view(self):
+        response = self.client.get(reverse("health-weight-update", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse("health-weight-update", kwargs={'pk': 1}), data={})
+        self.assertEqual(response.status_code, 200)
+
+    def test_response_user2_update_view(self):
+        self.client.logout()
+        self.client.login(username="bdam", password="123456")
+        response = self.client.get(reverse("health-weight-update", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 401)
+        response = self.client.post(reverse("health-weight-update", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 401)

@@ -47,7 +47,7 @@ health_urls = [
     path("health/weight/", login_required(WeightListView.as_view()), name="health-weight"),
     path("health/weight/create/", login_required(WeightCreateView.as_view()), name="health-weight-create"),
     path("health/weight/<int:pk>/", login_required(WeightDetailView.as_view()), name="health-weight-detail"),
-    path("health/weight/<int:pk>/update/", login_required(WeightDetailView.as_view()), name="health-weight-update"),
+    path("health/weight/<int:pk>/update/", login_required(WeightUpdateView.as_view()), name="health-weight-update"),
     path("health/weight/<int:pk>/delete/", login_required(WeightDeleteView.as_view()), name="health-weight-delete"),
 ]
 

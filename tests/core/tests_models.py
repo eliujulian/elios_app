@@ -1,8 +1,10 @@
 from django.test import TestCase
+from django.contrib.auth.models import Group, Permission, ContentType
 from core.models import *
+from tests.texts_mixins import CreateStandardGroupsMixin
 
 
-class UserModelTest(TestCase):
+class UserModelTest(CreateStandardGroupsMixin, TestCase):
     def test_get_confirm_url(self):
         data = {"username": "adam", "password": "password", "email": "example@eliu.de" }
         self.client.post(reverse("account-register"), data=data)
