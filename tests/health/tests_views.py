@@ -61,6 +61,13 @@ class WeightListTest(WeightClassTests):
 
 
 class WeightDetailViewTest(WeightClassTests):
+    def test_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("health-weight-detail", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn("login", response.url)
+
     def test_response_detail_view_get(self):
         response = self.client.get(reverse("health-weight-detail", kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 200)
@@ -70,11 +77,13 @@ class WeightDetailViewTest(WeightClassTests):
         response = self.client.post(reverse("health-weight-detail", kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 405)
 
-    def test_response_user2_detail_view(self):
+    def test_response_user2_detail_view_get_and_post(self):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("health-weight-detail", kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 401)
+        response = self.client.post(reverse("health-weight-detail", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 405)
 
 
 class WeightUpdateViewTest(WeightClassTests):
@@ -91,3 +100,61 @@ class WeightUpdateViewTest(WeightClassTests):
         self.assertEqual(response.status_code, 401)
         response = self.client.post(reverse("health-weight-update", kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 401)
+
+
+class WeightDeleteViewTest(WeightClassTests):
+    def test_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("health-weight-delete", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn('login', response.url)
+        response = self.client.post(reverse("health-weight-delete", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn('login', response.url)
+
+    def test_logged_in(self):
+        response = self.client.get(reverse("health-weight-delete", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, TemplateResponse)
+        response = self.client.post(reverse("health-weight-delete", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("message", response.url)
+
+    def test_wrong_user(self):
+        self.client.logout()
+        self.client.login(username="bdam", password="123456")
+        response = self.client.get(reverse("health-weight-delete", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 401)
+        response = self.client.post(reverse("health-weight-delete", kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 401)
+
+
+class WeightCreateTest(WeightClassTests):
+    def test_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("health-weight-create"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn('login', response.url)
+        response = self.client.post(reverse("health-weight-create"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn('login', response.url)
+
+    def test_logged_in_get(self):
+        response = self.client.get(reverse("health-weight-create"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, TemplateResponse)
+
+    def test_logged_in_post_not_valid_data(self):
+        response = self.client.post(reverse("health-weight-create"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, TemplateResponse)
+
+    def test_logged_in_post_valid_data(self):
+        data = {"weight": 80, "measurement_date": datetime.date(2020, 1, 1)}
+        response = self.client.post(reverse("health-weight-create"), data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Weight.objects.filter(created_by_id=1).count(), 2)

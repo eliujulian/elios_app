@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import reverse
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from core.views import CustomListView, CustomDetailView, CustomCreateView, CustomUpdateView, CustomDeleteView
+from core.views import CustomListView, CustomDetailView, CustomCreateView, CustomUpdateView, CustomDeleteView, \
+    OnlyCreatorAccessMixin
 from health.models import Weight
 from health.forms import WeightForm
 
@@ -20,36 +21,19 @@ class WeightListView(PermissionRequiredMixin, CustomListView):
         return Weight.objects.filter(created_by=self.request.user)
 
 
-class WeightDetailView(PermissionRequiredMixin, CustomDetailView):
+class WeightDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
     model = Weight
     permission_required = 'core.health_app'
-
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if request.user != instance.created_by:
-            return HttpResponse("Unauthorized", status=401)
-        return super().get(request, *args, **kwargs)
+    http_method_names = ['get']
 
 
-class WeightUpdateView(PermissionRequiredMixin, CustomUpdateView):
+class WeightUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
     model = Weight
     form_class = WeightForm
     permission_required = 'core.health_app'
 
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if request.user != instance.created_by:
-            return HttpResponse("Unauthorized", status=401)
-        return super().get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if request.user != instance.created_by:
-            return HttpResponse("Unauthorized", status=401)
-        return super().post(request, *args, **kwargs)
-
-
-class WeightDeleteView(PermissionRequiredMixin, CustomDeleteView):
+class WeightDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
     model = Weight
     permission_required = 'core.health_app'
 
