@@ -49,6 +49,21 @@ class CustomDeleteView(DeleteView):
     template_name = "generic/generic_confirm_delete.html"
 
 
+class OnlyCreatorAccessMixin:
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object() # noqa
+        if request.user != instance.created_by:
+            return HttpResponse("Unauthorized", status=401)
+        return super().get(request, *args, **kwargs) # noqa
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object() # noqa
+        if request.user != instance.created_by:
+            return HttpResponse("Unauthorized", status=401)
+        return super().post(request, *args, **kwargs) # noqa
+
+
+
 class UserDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
     template_name = "user/user_detail.html"
