@@ -7,10 +7,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views import View
 from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth import logout
-from django.contrib.auth.models import Permission, Group
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from .forms import *
 from elios_app import settings
@@ -63,7 +62,6 @@ class OnlyCreatorAccessMixin:
         return super().post(request, *args, **kwargs) # noqa
 
 
-
 class UserDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
     template_name = "user/user_detail.html"
@@ -100,7 +98,7 @@ class AccountRegisterView(CreateView):
         self.object.save()
 
         # add for all new users to group "standard-users
-        Group.objects.get(name= "StandardUsers").user_set.add(self.object)
+        Group.objects.get(name="StandardUsers").user_set.add(self.object)
 
         confirm_url = self.object.get_confirm_url()
 
@@ -127,6 +125,8 @@ class AccountRegisterView(CreateView):
 
 
 class AccountConfirmEMailView(View):
+    http_method_names = ["get"]
+
     def get(self, request):
         username = self.request.GET.get("username")
         confirmation_code = self.request.GET.get("confirmation_code")
@@ -145,9 +145,6 @@ class AccountConfirmEMailView(View):
         url = reverse("message-failure-public")
         url += "?message=Confirmation not successful."
         return HttpResponseRedirect(url)
-
-    def post(self, request):
-        return HttpResponseNotAllowed(["get"])
 
 
 class AccountDetailView(PermissionRequiredMixin, CustomDetailView):
@@ -190,7 +187,7 @@ class AccountDeleteView(PermissionRequiredMixin, CustomDeleteView):
     permission_required = 'core.landingpage_right'
 
     def get_success_url(self):
-        instance = self.object
+        instance = self.get_object()
         message = f"{instance} was deleted."
         return reverse("message-success-public") + f"?message={message}"
 
@@ -209,10 +206,10 @@ class AccountDeleteView(PermissionRequiredMixin, CustomDeleteView):
             return super().post(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        instance = self.get_object()
         success_url = self.get_success_url()
-        self.object.is_active = False
-        self.object.date_deleted = datetime.datetime.today()
-        self.object.save()
+        instance.is_active = False
+        instance.date_deleted = datetime.datetime.today()
+        instance.save()
         logout(request)
         return HttpResponseRedirect(success_url)
