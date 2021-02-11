@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'health',
+    'personality',
 ]
 
 MIDDLEWARE = [
@@ -160,3 +161,5 @@ ALLOW_SENDING_CONFIRMATION_EMAILS = True
 
 if not ALLOW_SENDING_CONFIRMATION_EMAILS:
     print("WARNING: No sending of confirmation E-Mails")
+
+CHECK_CREATE_GROUPS = False

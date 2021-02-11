@@ -102,4 +102,5 @@ class PermissionRegister(models.Model):
         permissions = (
             ('landingpage_right', 'Right to view landingpage'),
             ('health_app', 'Right to user Health App'),
+            ('personality_app', 'Use Personality App'),
         )
