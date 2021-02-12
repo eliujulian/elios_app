@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 from core.models import AbstractNoteModel, AbstractBaseModel, User
 from core.definitions import FIVE_SCALA
 
@@ -34,5 +35,8 @@ class PersonalityProfile(AbstractBaseModel):
     def neuroticism_range(self):
         return range(0, self.neuroticism_score)
 
+    def get_absolute_url(self):
+        return reverse("personality")
+
     def __str__(self):
-        return self.profile_about
+        return str(self.profile_about)

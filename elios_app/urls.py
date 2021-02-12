@@ -12,6 +12,7 @@ from django.urls import path
 from elios_app.views import *
 from core.views import *
 from health.views import *
+from personality.views import *
 
 
 basic_urls = [
@@ -43,8 +44,14 @@ health_urls = [
     path("health/weight/<int:pk>/delete/", login_required(WeightDeleteView.as_view()), name="health-weight-delete"),
 ]
 
+personality_urls = [
+    path("personality/", login_required(PersonalityView.as_view()), name="personality"),
+    path("personality/update/", login_required(PersonalityView.as_view()), name="personality-update"),
+]
+
 urlpatterns = list()
 urlpatterns.extend(basic_urls)
 urlpatterns.extend(account_management_urls)
 urlpatterns.extend(admin_urls)
 urlpatterns.extend(health_urls)
+urlpatterns.extend(personality_urls)

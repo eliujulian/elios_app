@@ -23,6 +23,10 @@
             <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>
         {% endif %}
 
+        {% if perms.personality.personality_app %}
+            <a href="{% url 'personality' %}">Persönlichkeitsprofil</a>
+        {% endif %}
+
         <div class="text-center">
             <video width="320" autoplay loop muted>
                 <source src="{% static 'aRP1Gr7_460sv.mp4' %}" type="video/mp4">
