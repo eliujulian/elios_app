@@ -30,3 +30,11 @@ PRIVACY_OPTIONS = (
     (3, "Jeder"),  # Every user
     (4, "Öffentlich")  # Every user and every anonymous user
 )
+
+FIVE_SCALA = (
+    (1, '1'),
+    (2, '2'),
+    (3, '3'),
+    (4, '4'),
+    (5, '5'),
+)
