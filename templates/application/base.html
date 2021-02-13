@@ -18,6 +18,9 @@
 
         <h1>Navigation</h1>
 
+        <a href="{% url 'account-detail' user.username %}">Account</a>
+        <a href="{% url 'account-update' user.username %}">Account Update</a>
+
         {% if perms.health.health_app %}
             <a href="{% url 'health-weight' %}">Gewicht Liste</a>
             <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>

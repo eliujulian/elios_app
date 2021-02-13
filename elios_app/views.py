@@ -38,6 +38,7 @@ def test_view(request):
             print("Created Group: ", group)
 
     context = dict()
+    context['user'] = request.user
     context['data'] = f"You are logged in as {request.user} ({request.user.username})."
 
     if request.method != "GET":
