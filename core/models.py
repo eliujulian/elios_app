@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -53,14 +55,18 @@ class AbstractBaseModel(models.Model):
     class Meta:
         abstract = True
 
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+", blank=True)
-    timestamp_created = models.DateTimeField()
-    timestamp_changed = models.DateTimeField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+", blank=True, editable=False)
+    timestamp_created = models.DateTimeField(editable=False)
+    timestamp_changed = models.DateTimeField(editable=False)
 
     def clean(self):
         if not self.timestamp_created:
             self.timestamp_created = timezone.now()
         self.timestamp_changed = timezone.now()
+
+    @staticmethod
+    def get_id_slug(length):
+        return ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=length))
 
     def get_absolute_url(self):
         raise Exception("Improperly configured, please configure get_absolute_url function.")

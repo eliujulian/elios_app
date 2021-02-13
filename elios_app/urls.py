@@ -46,7 +46,10 @@ health_urls = [
 
 personality_urls = [
     path("personality/", login_required(PersonalityView.as_view()), name="personality"),
-    path("personality/update/", login_required(PersonalityView.as_view()), name="personality-update"),
+    path("personality/update/", login_required(PersonalityUpdateView.as_view()), name="personality-update"),
+    path("personality/create/", login_required(PersonalityNoteCreateView.as_view()), name="personality-note-create"),
+    path("personality/<slug>/", login_required(PersonalityNoteUpdateView.as_view()), name="personality-note-update"),
+    path("personality/<slug>/delete/", login_required(PersonalityNoteDeleteView.as_view()), name="personality-note-delete"),
 ]
 
 urlpatterns = list()

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from personality.models import PersonalityProfile
+from personality.models import PersonalityProfile, PersonalityNote
 
 
 class PersonalityUpdateForm(ModelForm):
@@ -12,3 +12,18 @@ class PersonalityUpdateForm(ModelForm):
             'agreeableness_score',
             'neuroticism_score'
         ]
+
+
+class NoteForm(ModelForm):
+    class Meta:
+        model = PersonalityNote
+        fields = [
+            'title',
+            'sphere',
+            'description'
+        ]
+        labels = {
+            'title': 'Titel',
+            'sphere': 'Bereich',
+            'description': 'Beschreibung'
+        }

@@ -1,0 +1,46 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-body">
+                <h2><a href="{% url 'personality-update' %}">{{ object }}</a></h2>
+
+                <h5>Big 5</h5>
+
+                <div class="row">
+                    <div class="col-2">Offenheit<br>{% for n in object.open_minded_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col-2">Gewissenhaftigkeit<br>{% for n in object.conscientiousness_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col-2">Exraversion<br>{% for n in object.extraversion_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col-2">Verträglichkeit<br>{% for n in object.agreeableness_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col-2">Neurotizismus<br>{% for n in object.neuroticism_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                </div>
+
+                <br>
+                <a href="{% url 'personality-note-create' %}"><button class="btn btn-primary">Neue Notiz</button></a>
+                <br>
+                <br>
+                <h5>Notizen</h5>
+
+                {% for note in object.notes %}
+                    <div class="card">
+                        <div class="card-title">
+                            <a href="{% url 'personality-note-update' note.id_slug %}">{{ note.title }}</a>
+                            {{ note.get_sphere_display }}
+                            ({{ note.timestamp_created|date:"d.m.Y" }})
+                        </div>
+
+                        <div class="card-body">
+                            {{ note.description|linebreaks }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+{% endblock %}

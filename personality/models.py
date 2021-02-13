@@ -13,7 +13,7 @@ class PersonalityProfile(AbstractBaseModel):
     4. Rücksichtnahme, Kooperationsbereitschaft, Empathie
     5. Neurotizismus, Emotionale Labilität, Verletzlichkeit
     """
-    profile_about = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    profile_about = models.OneToOneField(to=User, on_delete=models.CASCADE, editable=False)
     open_minded_score = models.IntegerField(choices=FIVE_SCALA, default=3)
     conscientiousness_score = models.IntegerField(choices=FIVE_SCALA, default=3)
     extraversion_score = models.IntegerField(choices=FIVE_SCALA, default=3)
@@ -38,5 +38,28 @@ class PersonalityProfile(AbstractBaseModel):
     def get_absolute_url(self):
         return reverse("personality")
 
+    def notes(self):
+        return self.personalitynote_set.all()
+
     def __str__(self):
         return str(self.profile_about)
+
+
+class PersonalityNote(AbstractNoteModel):
+    note_about = models.ForeignKey(to=PersonalityProfile, on_delete=models.CASCADE, editable=False)
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
+
+    def get_absolute_url(self):
+        return reverse("personality")
+
+    def get_update_url(self):
+        return reverse("personality-note-update", args=[self.id_slug, ])
+
+    def get_create_url(self):
+        return reverse("personality-note-create")
+
+    def get_delete_url(self):
+        return reverse("personality-note-delete", args=[self.id_slug, ])
+
+    def __str__(self):
+        return self.title
