@@ -71,6 +71,7 @@ class Habit(AbstractBaseModel):
     skip_weekdays = models.BooleanField(default=False)
     day_of_week = models.IntegerField(choices=DAYS, default=1)
     day_of_month = models.IntegerField(choices=DAY_OF_MONTH, default=1)
+    link = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.title
