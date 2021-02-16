@@ -13,6 +13,7 @@ from elios_app.views import *
 from core.views import *
 from health.views import *
 from personality.views import *
+from knowledge.views import *
 
 
 basic_urls = [
@@ -52,9 +53,18 @@ personality_urls = [
     path("personality/<slug>/delete/", login_required(PersonalityNoteDeleteView.as_view()), name="personality-note-delete"),
 ]
 
+knowledge_urls = [
+    path("knowledge/book/", login_required(BookListView.as_view()), name="books"),
+    path("knowledge/book/create/", login_required(BookCreateView.as_view()), name="book-create"),
+    path("knowledge/book/<slug>/", login_required(BookDetailView.as_view()), name="book-detail"),
+    path("knowledge/book/<slug>/update/", login_required(BookUpdateView.as_view()), name="book-update"),
+    path("knowledge/book/<slug>/delete/", login_required(BookDeleteView.as_view()), name="book-delete"),
+]
+
 urlpatterns = list()
 urlpatterns.extend(basic_urls)
 urlpatterns.extend(account_management_urls)
 urlpatterns.extend(admin_urls)
 urlpatterns.extend(health_urls)
 urlpatterns.extend(personality_urls)
+urlpatterns.extend(knowledge_urls)
