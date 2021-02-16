@@ -58,6 +58,7 @@ class AbstractBaseModel(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+", blank=True, editable=False)
     timestamp_created = models.DateTimeField(editable=False)
     timestamp_changed = models.DateTimeField(editable=False)
+    # id_slug = models.CharField(max_length=18, unique=True, editable=False)  # implement this in child class if needed
 
     def clean(self):
         if not self.timestamp_created:
