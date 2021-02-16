@@ -41,12 +41,6 @@ class WeightListTest(WeightClassTests):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
 
-    def test_get_response_not_logged_in(self):
-        self.client.logout()
-        response = self.client.get(reverse("health-weight"))
-        self.assertEqual(response.status_code, 302)
-        self.assertIsInstance(response, HttpResponseRedirect)
-
     def test_with_data(self):
         response = self.client.get(reverse("health-weight"))
         self.assertEqual(response.status_code, 200)
