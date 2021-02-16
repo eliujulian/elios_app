@@ -6,6 +6,7 @@ class Book(AbstractBaseModel):
     class Meta:
         abstract = True
 
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
     title = models.CharField(max_length=160)
     author = models.CharField(max_length=160)
     year = models.IntegerField()
@@ -20,6 +21,7 @@ class Chapter(AbstractBaseModel):
     class Meta:
         abstract = True
 
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     title = models.CharField(max_length=160)
     summary = models.TextField(null=True, blank=True)
