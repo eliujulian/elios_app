@@ -36,7 +36,7 @@ class BookListTest(BookTests):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
 
-    def test_numer_of_objects(self):
+    def test_number_of_objects(self):
         response = self.client.get(reverse('books'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context_data['object_list'].count(), 1)
