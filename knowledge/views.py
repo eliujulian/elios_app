@@ -1,3 +1,4 @@
+from django.shortcuts import reverse
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomCreateView, CustomListView, CustomDetailView, CustomUpdateView, CustomDeleteView, \
     OnlyCreatorAccessMixin
@@ -26,6 +27,7 @@ class BookDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeta
     model = Book
     permission_required = 'core.knowledge_app'
     slug_field = 'id_slug'
+    http_method_names = ['get']
 
 
 class BookUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
@@ -38,3 +40,7 @@ class BookUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpda
 class BookDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
     model = Book
     permission_required = 'core.knowledge_app'
+    slug_field = 'id_slug'
+
+    def get_success_url(self):
+        return reverse("books")
