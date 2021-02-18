@@ -41,6 +41,10 @@ class WeightListTest(WeightClassTests):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
 
+    def test_post(self):
+        response = self.client.post(reverse("health-weight"))
+        self.assertEqual(response.status_code, 405)
+
     def test_with_data(self):
         response = self.client.get(reverse("health-weight"))
         self.assertEqual(response.status_code, 200)
@@ -81,13 +85,17 @@ class WeightDetailViewTest(WeightClassTests):
 
 
 class WeightUpdateViewTest(WeightClassTests):
+    def test_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("health-weight-update", args=[1, ]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("login", response.url)
+
     def test_response_user_update_view(self):
-        response = self.client.get(reverse("health-weight-update", kwargs={'pk': 1}))
-        self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse("health-weight-update", kwargs={'pk': 1}), data={})
         self.assertEqual(response.status_code, 200)
 
-    def test_response_user2_update_view(self):
+    def test_response_wrong_user(self):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("health-weight-update", kwargs={'pk': 1}))

@@ -14,6 +14,9 @@ class Book(AbstractBaseModel):
     def get_absolute_url(self):
         return reverse('book-detail', args=[self.id_slug, ])
 
+    def get_create_url(self):
+        return reverse('book-create')
+
     def __str__(self):
         return f'{self.author} - {self.title} ({str(self.year)})'
 

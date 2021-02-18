@@ -48,6 +48,26 @@ class BookListTest(BookTests):
         self.assertEqual(response.context_data['object_list'].count(), 0)
 
 
+class BookCreateTest(BookTests):
+    def test_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse('book-create'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("login", response.url)
+
+    def test_get(self):
+        response = self.client.get(reverse('book-create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, TemplateResponse)
+
+    def test_post(self):
+        response = self.client.post(reverse('book-create'))
+        self.assertEqual(response.status_code, 200)
+
+
+
+
+
 class BookDetailsTest(BookTests):
     def test_not_logged_in(self):
         self.client.logout()
@@ -105,14 +125,18 @@ class BookDeleteTest(BookTests):
         self.assertIn("login", response.url)
 
     def test_get(self):
+        self.assertEqual(Book.objects.filter(created_by_id=1).count(), 1)
         response = self.client.get(reverse("book-delete", args=[self.book.id_slug]))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response, TemplateResponse)
+        self.assertEqual(Book.objects.filter(created_by_id=1).count(), 1)
 
     def test_post(self):
+        self.assertEqual(Book.objects.filter(created_by_id=1).count(), 1)
         response = self.client.post(reverse("book-delete", args=[self.book.id_slug]))
         self.assertEqual(response.status_code, 302)
         self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual(Book.objects.filter(created_by_id=1).count(), 0)
 
     def test_wrong_user(self):
         self.client.logout()
