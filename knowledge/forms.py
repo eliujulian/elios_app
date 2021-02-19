@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from knowledge.models import Book
+from knowledge.models import Book, Chapter
 
 
 class BookForm(ModelForm):
@@ -9,5 +9,14 @@ class BookForm(ModelForm):
             'title',
             'author',
             'year',
+            'summary'
+        ]
+
+
+class ChapterForm(ModelForm):
+    class Meta:
+        model = Chapter
+        fields = [
+            'title',
             'summary'
         ]

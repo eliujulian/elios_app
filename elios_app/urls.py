@@ -50,7 +50,8 @@ personality_urls = [
     path("personality/update/", login_required(PersonalityUpdateView.as_view()), name="personality-update"),
     path("personality/create/", login_required(PersonalityNoteCreateView.as_view()), name="personality-note-create"),
     path("personality/<slug>/", login_required(PersonalityNoteUpdateView.as_view()), name="personality-note-update"),
-    path("personality/<slug>/delete/", login_required(PersonalityNoteDeleteView.as_view()), name="personality-note-delete"),
+    path("personality/<slug>/delete/", login_required(PersonalityNoteDeleteView.as_view()),
+         name="personality-note-delete"),
 ]
 
 knowledge_urls = [
@@ -59,6 +60,14 @@ knowledge_urls = [
     path("knowledge/book/<slug>/", login_required(BookDetailView.as_view()), name="book-detail"),
     path("knowledge/book/<slug>/update/", login_required(BookUpdateView.as_view()), name="book-update"),
     path("knowledge/book/<slug>/delete/", login_required(BookDeleteView.as_view()), name="book-delete"),
+    path("knowledge/book_<str:book>/chapter/create/", login_required(ChapterCreateView.as_view()),
+         name="chapter-create"),
+    path("knowledge/book_<str:book>/chapter/<slug>/", login_required(ChapterDetailView.as_view()),
+         name="chapter-detail"),
+    path("knowledge/book_<str:book>/chapter/<slug>/update/", login_required(ChapterUpdateView.as_view()),
+         name="chapter-update"),
+    path("knowledge/book_<str:book>/chapter/<slug>/delete/", login_required(ChapterDeleteView.as_view()),
+         name="chapter-delete"),
 ]
 
 urlpatterns = list()

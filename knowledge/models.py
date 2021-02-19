@@ -22,14 +22,17 @@ class Book(AbstractBaseModel):
 
 
 class Chapter(AbstractBaseModel):
-    class Meta:
-        abstract = True
-
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, editable=False)
     title = models.CharField(max_length=160)
     summary = models.TextField(null=True, blank=True)
-    order_num = models.IntegerField(default=0)
+    order_num = models.IntegerField(default=0, editable=False)
+
+    def get_absolute_url(self):
+        return None #ToDo
+
+    def get_create_url(self):
+        return None #ToDo
 
     def __str__(self):
         return self.title

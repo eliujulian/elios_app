@@ -1,5 +1,3 @@
-import datetime
-from django.shortcuts import reverse
 from django.utils import timezone
 from django.test import TestCase
 from django.template.response import TemplateResponse
@@ -63,9 +61,6 @@ class BookCreateTest(BookTests):
     def test_post(self):
         response = self.client.post(reverse('book-create'))
         self.assertEqual(response.status_code, 200)
-
-
-
 
 
 class BookDetailsTest(BookTests):
