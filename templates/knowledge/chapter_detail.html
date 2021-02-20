@@ -10,8 +10,23 @@
                 <a href="{% url 'book-detail' object.book.id_slug %}">{{ object.book }}</a>
             </div>
             <div class="card-body">
+                {% if object.order_num > 0 %}
+                    <a href="{% url 'chapter-detail' object.book.id_slug object.order_num_minus_one %}">Vorheriges Kapitel</a>
+                {% endif %}
+
+                {% if object.order_num_plus_one < object.book.chapter_set.count %}
+                    <a href="{% url 'chapter-detail' object.book.id_slug object.order_num_plus_one %}">Nächstes Kapitel</a>
+                {% endif %}
+
+                <hr>
                 {{ object.summary|linebreaks }}
 
+                {% if object.source %}
+                   <strong>Fundstelle:</strong>
+                    {{ object.source }}
+                {% endif %}
+
+                <hr>
                 <a href="{% url 'chapter-update' object.book.id_slug object.order_num %}">
                     <button class="btn btn-primary">Bearbeiten</button>
                 </a>

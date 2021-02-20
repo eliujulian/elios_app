@@ -9,8 +9,16 @@ class BookForm(ModelForm):
             'title',
             'author',
             'year',
-            'summary'
+            'summary',
+            'source'
         ]
+        labels = {
+            'title': 'Titel',
+            'author': 'Autor',
+            'year': 'Jahr',
+            'summary': 'Zusammenfassung',
+            'source': 'Fundstelle'
+        }
 
 
 class ChapterForm(ModelForm):
@@ -18,5 +26,11 @@ class ChapterForm(ModelForm):
         model = Chapter
         fields = [
             'title',
-            'summary'
+            'summary',
+            'source'
         ]
+        labels = {
+            'title': 'Titel',
+            'summary': 'Zusammenfassung',
+            'source': 'Fundstelle'
+        }
