@@ -4,12 +4,16 @@ from core.models import AbstractBaseModel
 
 
 class Book(AbstractBaseModel):
+    class Meta:
+        ordering = ['author']
+
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
     title = models.CharField(max_length=160)
     author = models.CharField(max_length=160)
     year = models.IntegerField()
     is_favorite = models.BooleanField(default=False)
     summary = models.TextField(null=True, blank=True)
+    source = models.CharField(max_length=160, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('book-detail', args=[self.id_slug, ])
@@ -29,7 +33,14 @@ class Chapter(AbstractBaseModel):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, editable=False)
     title = models.CharField(max_length=160)
     summary = models.TextField(null=True, blank=True)
+    source = models.CharField(max_length=160, null=True, blank=True)
     order_num = models.IntegerField(default=0, editable=False)
+
+    def order_num_plus_one(self):
+        return self.order_num + 1
+
+    def order_num_minus_one(self):
+        return self.order_num - 1
 
     def get_absolute_url(self):
         return reverse("chapter-detail", args=[self.book.id_slug, self.order_num])
