@@ -1,5 +1,5 @@
 from django.shortcuts import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomCreateView, CustomListView, CustomDetailView, CustomUpdateView, CustomDeleteView, \
     OnlyCreatorAccessMixin
@@ -32,6 +32,7 @@ class BookDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeta
     permission_required = perm
     slug_field = 'id_slug'
     http_method_names = ['get']
+    template_name = 'knowledge/book_detail.html'
 
 
 class BookUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
@@ -51,40 +52,88 @@ class BookDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDele
 
 
 class ChapterCreateView(PermissionRequiredMixin, CustomCreateView):
-    model = Book
-    permission_required = perm
-    slug_field = 'id_slug'
-
-    def form_valid(self, form):
-        form.instance.id_slug = self.model.get_id_slug(10)
-
-        book = Book.objects.get(id_slug=self.kwargs['book'])
-        if book.created_by != self.request.user:
-            return HttpResponse("Unauthorized", status=401)
-        else:
-            form.instance.book = book
-
-        return super().form_valid(form)
-
-
-class ChapterDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
-    model = Book
-    permission_required = perm
-    slug_field = 'id_slug'
-    http_method_names = ['get']
-
-
-class ChapterUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
-    model = Book
+    model = Chapter
     permission_required = perm
     slug_field = 'id_slug'
     form_class = ChapterForm
 
+    def get(self, request, *args, **kwargs):
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+        if book.created_by != self.request.user:
+            return HttpResponse("Unauthorized", status=401)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+        if book.created_by != self.request.user:
+            return HttpResponse("Unauthorized", status=401)
+        return super(ChapterCreateView, self).post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.id_slug = self.model.get_id_slug(10)
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+        form.instance.book = Book.objects.get(id_slug=self.kwargs['book'])
+        form.instance.order_num = Chapter.objects.filter(book=book).count()
+        return super().form_valid(form)
+
+
+class ChapterDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
+    model = Chapter
+    permission_required = perm
+    http_method_names = ['get']
+    template_name = 'knowledge/chapter_detail.html'
+
+    def get_object(self, queryset=None):
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+        return Chapter.objects.get(
+            book_id=book.id,
+            order_num=self.kwargs['order_num']
+        )
+
+
+class ChapterUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
+    model = Chapter
+    permission_required = perm
+    form_class = ChapterForm
+
+    def get_object(self, queryset=None):
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+        return Chapter.objects.get(
+            book_id=book.id,
+            order_num=self.kwargs['order_num']
+        )
+
 
 class ChapterDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
-    model = Book
+    model = Chapter
     permission_required = perm
-    slug_field = 'id_slug'
+
+    def get_object(self, queryset=None):
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+        return Chapter.objects.get(
+            book_id=book.id,
+            order_num=self.kwargs['order_num']
+        )
+
+    def post(self, request, *args, **kwargs):
+        book = Book.objects.get(id_slug=self.kwargs['book'])
+
+        if book.created_by != request.user:
+            return HttpResponse("Unauthorized", 401)
+
+        instance = Chapter.objects.get(
+            book_id=book.id,
+            order_num=self.kwargs['order_num']
+        )
+
+        self.object = instance  # noqa
+        success_url = self.get_success_url()
+        self.object.delete()
+        chapters = book.chapter_set.all()
+        for i, c in enumerate(chapters):
+            c.order_num = i
+            c.save()
+        return HttpResponseRedirect(success_url)
 
     def get_success_url(self):
-        return reverse("book-detail", args=self.kwargs['book'])
+        return reverse("book-detail", args=[self.kwargs['book'], ])

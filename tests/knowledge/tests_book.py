@@ -1,7 +1,6 @@
 from django.utils import timezone
 from django.test import TestCase
 from django.template.response import TemplateResponse
-from django.http import HttpResponseRedirect
 from tests.texts_mixins import *
 from knowledge.views import *
 

@@ -6,20 +6,27 @@
 
         <div class="card">
             <div class="card-body">
-                <h2><a href="{% url 'personality-update' %}">{{ object }}</a></h2>
+                <h2>{{ object }}</h2>
 
                 <h5>Big 5</h5>
 
                 <div class="row">
-                    <div class="col-2">Offenheit<br>{% for n in object.open_minded_range %}<i class="fas fa-star"></i>{% endfor %}</div>
-                    <div class="col-2">Gewissenhaftigkeit<br>{% for n in object.conscientiousness_range %}<i class="fas fa-star"></i>{% endfor %}</div>
-                    <div class="col-2">Exraversion<br>{% for n in object.extraversion_range %}<i class="fas fa-star"></i>{% endfor %}</div>
-                    <div class="col-2">Verträglichkeit<br>{% for n in object.agreeableness_range %}<i class="fas fa-star"></i>{% endfor %}</div>
-                    <div class="col-2">Neurotizismus<br>{% for n in object.neuroticism_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col">Offenheit<br>{% for n in object.open_minded_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col">Gewissenhaftigkeit<br>{% for n in object.conscientiousness_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col">Exraversion<br>{% for n in object.extraversion_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col">Verträglichkeit<br>{% for n in object.agreeableness_range %}<i class="fas fa-star"></i>{% endfor %}</div>
+                    <div class="col">Neurotizismus<br>{% for n in object.neuroticism_range %}<i class="fas fa-star"></i>{% endfor %}</div>
                 </div>
 
                 <br>
-                <a href="{% url 'personality-note-create' %}"><button class="btn btn-primary">Neue Notiz</button></a>
+                <a href="{% url 'personality-update' %}">
+                    <button class="btn btn-primary">Bearbeiten</button>
+                </a>
+
+                <a href="{% url 'personality-note-create' %}">
+                    <button class="btn btn-primary">Neue Notiz</button>
+                </a>
+
                 <br>
                 <br>
                 <h5>Notizen</h5>

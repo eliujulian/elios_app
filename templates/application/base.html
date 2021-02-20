@@ -11,12 +11,17 @@
 </head>
 <body>
 
+<div class="container-fluid">
+    <div class="btn-group" role="group">
+        <a href="{% url 'landingpage' %}"><button type="button" class="btn btn-primary">Home</button></a>
+    </div>
+</div>
+
 <div class="container">
+
 <div class="card">
     {% block content %}
         {{ data }}
-
-        <h1>Navigation</h1>
 
         <a href="{% url 'account-detail' user.username %}">Account</a>
         <a href="{% url 'account-update' user.username %}">Account Update</a>
@@ -28,6 +33,11 @@
 
         {% if perms.personality.personality_app %}
             <a href="{% url 'personality' %}">Persönlichkeitsprofil</a>
+        {% endif %}
+
+        {% if perms.knowledge.knowledge_app %}
+            <a href="{% url 'book-create' %}">Neues Buch</a>
+            <a href="{% url 'books' %}">Alle Bücher</a>
         {% endif %}
 
         <div class="text-center">

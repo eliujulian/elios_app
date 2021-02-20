@@ -62,11 +62,11 @@ knowledge_urls = [
     path("knowledge/book/<slug>/delete/", login_required(BookDeleteView.as_view()), name="book-delete"),
     path("knowledge/book_<str:book>/chapter/create/", login_required(ChapterCreateView.as_view()),
          name="chapter-create"),
-    path("knowledge/book_<str:book>/chapter/<slug>/", login_required(ChapterDetailView.as_view()),
+    path("knowledge/book_<str:book>/chapter/<int:order_num>/", login_required(ChapterDetailView.as_view()),
          name="chapter-detail"),
-    path("knowledge/book_<str:book>/chapter/<slug>/update/", login_required(ChapterUpdateView.as_view()),
+    path("knowledge/book_<str:book>/chapter/<int:order_num>/update/", login_required(ChapterUpdateView.as_view()),
          name="chapter-update"),
-    path("knowledge/book_<str:book>/chapter/<slug>/delete/", login_required(ChapterDeleteView.as_view()),
+    path("knowledge/book_<str:book>/chapter/<int:order_num>/delete/", login_required(ChapterDeleteView.as_view()),
          name="chapter-delete"),
 ]
 

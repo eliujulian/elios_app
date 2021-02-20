@@ -22,6 +22,9 @@ class Book(AbstractBaseModel):
 
 
 class Chapter(AbstractBaseModel):
+    class Meta:
+        ordering = ['order_num']
+
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, editable=False)
     title = models.CharField(max_length=160)
@@ -29,10 +32,10 @@ class Chapter(AbstractBaseModel):
     order_num = models.IntegerField(default=0, editable=False)
 
     def get_absolute_url(self):
-        return None #ToDo
+        return reverse("chapter-detail", args=[self.book.id_slug, self.order_num])
 
     def get_create_url(self):
-        return None #ToDo
+        return reverse("chapter-create", args=[self.book.id_slug, ])
 
     def __str__(self):
         return self.title

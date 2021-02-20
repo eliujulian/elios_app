@@ -1,0 +1,25 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ object }}</h3>
+                <a href="{% url 'book-detail' object.book.id_slug %}">{{ object.book }}</a>
+            </div>
+            <div class="card-body">
+                {{ object.summary|linebreaks }}
+
+                <a href="{% url 'chapter-update' object.book.id_slug object.order_num %}">
+                    <button class="btn btn-primary">Bearbeiten</button>
+                </a>
+
+                <a href="{%  url 'chapter-delete' object.book.id_slug object.order_num %}">
+                    <button class="btn btn-danger">Löschen</button>
+                </a>
+            </div>
+        </div>
+
+{% endblock %}
