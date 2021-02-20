@@ -1,13 +1,11 @@
 from django.db import models
+from django.shortcuts import reverse
 from core.models import AbstractBaseModel, User
 from core.definitions import *
 
 
 class HabitProfile(AbstractBaseModel):
-    class Meta:
-        abstract = True
-
-    profile_for = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    profile_for = models.OneToOneField(to=User, on_delete=models.CASCADE, editable=False)
 
     # Visions
     vision_1 = models.TextField(null=True, blank=True)
@@ -18,6 +16,23 @@ class HabitProfile(AbstractBaseModel):
     vision_6 = models.TextField(null=True, blank=True)
     vision_7 = models.TextField(null=True, blank=True)
     vision_8 = models.TextField(null=True, blank=True)
+
+    LABELS = {
+        'vision_1': 'Arbeit',
+        'vision_2': 'Finanzen',
+        'vision_3': 'Gesundheit',
+        'vision_4': 'Freizeit und Interessen',
+        'vision_5': 'Beziehung und Liebe',
+        'vision_6': 'Familie und Kinder',
+        'vision_7': 'Geselligkeit und Freunde',
+        'vision_8': 'Persönlichkeit'
+    }
+
+    def get_absolute_url(self):
+        return reverse("habit")
+
+    def __str__(self):
+        return f"HabitProfile for {self.profile_for}"
 
 
 class Goal(AbstractBaseModel):

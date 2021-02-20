@@ -7,7 +7,7 @@ SPHERE_OF_LIFE_DE = (
     (2, "Finanzen"),  # Money
     (3, "Gesundheit"),  # Health
     (4, "Freizeit"),  # Hobbies, Sport
-    (5, "Beziehungen"),  # Love
+    (5, "Beziehung"),  # Love
     (6, "Familie"),  # Parents, Kids
     (7, "Geselligkeit"),  # Friends
     (8, "Persönlichkeit"),  # Yourself
@@ -25,7 +25,7 @@ SPHERE_OF_LIFE_EN = {
 }
 
 PRIVACY_OPTIONS = (
-    (1, "Nur ich"),  #  Only user
+    (1, "Nur ich"),  # Only user
     (2, "Meine Kontakte"),   # User and contacts
     (3, "Jeder"),  # Every user
     (4, "Öffentlich")  # Every user and every anonymous user

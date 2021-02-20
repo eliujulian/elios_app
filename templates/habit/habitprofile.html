@@ -1,0 +1,56 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ object }}</h3>
+            </div>
+            <div class="card-body">
+
+                <h2>Visionen</h2>
+
+                <h4>1. Arbeit</h4>
+                {{ object.vision_1|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_1">Bearbeiten</a>
+
+                <h4>2. Finanzen</h4>
+                {{ object.vision_2|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_2">Bearbeiten</a>
+
+                <h4>3. Gesundheit</h4>
+                {{ object.vision_3|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_3">Bearbeiten</a>
+
+                <h4>4. Freizeit und Interessen</h4>
+                {{ object.vision_4|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_4">Bearbeiten</a>
+
+                <h4>5. Beziehung und Liebe</h4>
+                {{ object.vision_5|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_5">Bearbeiten</a>
+
+                <h4>6. Familie und Kinder</h4>
+                {{ object.vision_6|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_6">Bearbeiten</a>
+
+                <h4>7. Geselligkeit und Freunde</h4>
+                {{ object.vision_7|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_7">Bearbeiten</a>
+
+                <h4>8. Persönlichkeit</h4>
+                {{ object.vision_8|linebreaks }}
+                <a href="{% url 'habit-update' %}?field=vision_8">Bearbeiten</a>
+
+                <hr>
+                <a href="{% url 'habit-update' %}">
+                    <button class="btn btn-primary">Bearbeiten</button>
+                </a>
+
+
+            </div>
+        </div>
+
+{% endblock %}

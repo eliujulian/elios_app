@@ -14,6 +14,7 @@ from core.views import *
 from health.views import *
 from personality.views import *
 from knowledge.views import *
+from habit.views import *
 
 
 basic_urls = [
@@ -54,6 +55,11 @@ personality_urls = [
          name="personality-note-delete"),
 ]
 
+habit_urls = [
+    path("habit/", login_required(HabitProfileView.as_view()), name="habit"),
+    path("habit/update/", login_required(HabitProfileUpdateView.as_view()), name="habit-update"),
+]
+
 knowledge_urls = [
     path("knowledge/book/", login_required(BookListView.as_view()), name="books"),
     path("knowledge/book/create/", login_required(BookCreateView.as_view()), name="book-create"),
@@ -76,4 +82,5 @@ urlpatterns.extend(account_management_urls)
 urlpatterns.extend(admin_urls)
 urlpatterns.extend(health_urls)
 urlpatterns.extend(personality_urls)
+urlpatterns.extend(habit_urls)
 urlpatterns.extend(knowledge_urls)

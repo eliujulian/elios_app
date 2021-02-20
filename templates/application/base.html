@@ -23,23 +23,33 @@
     {% block content %}
         {{ data }}
 
+        <hr>
         <a href="{% url 'account-detail' user.username %}">Account</a>
         <a href="{% url 'account-update' user.username %}">Account Update</a>
 
         {% if perms.health.health_app %}
+            <hr>
             <a href="{% url 'health-weight' %}">Gewicht Liste</a>
             <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>
         {% endif %}
 
         {% if perms.personality.personality_app %}
+            <hr>
             <a href="{% url 'personality' %}">Persönlichkeitsprofil</a>
         {% endif %}
 
+        {% if perms.habit.habit_app %}
+            <hr>
+            <a href="{% url 'habit' %}">Visionen</a>
+        {% endif %}
+
         {% if perms.knowledge.knowledge_app %}
+            <hr>
             <a href="{% url 'book-create' %}">Neues Buch</a>
             <a href="{% url 'books' %}">Alle Bücher</a>
         {% endif %}
 
+        <hr>
         <div class="text-center">
             <video width="320" autoplay loop muted>
                 <source src="{% static 'aRP1Gr7_460sv.mp4' %}" type="video/mp4">
