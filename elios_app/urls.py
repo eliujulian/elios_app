@@ -74,6 +74,8 @@ knowledge_urls = [
          name="chapter-update"),
     path("knowledge/book_<str:book>/chapter/<int:order_num>/delete/", login_required(ChapterDeleteView.as_view()),
          name="chapter-delete"),
+    path("knowledge/random-book/", login_required(RandomBookRedirect.as_view()), name="book-random"),
+    path("knowledge/random-chapter/", login_required(RandomChapterRedirect.as_view()), name="chapter-random"),
 ]
 
 urlpatterns = list()

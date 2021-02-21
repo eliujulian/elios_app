@@ -1,8 +1,9 @@
+import random
 from django.shortcuts import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomCreateView, CustomListView, CustomDetailView, CustomUpdateView, CustomDeleteView, \
-    OnlyCreatorAccessMixin
+    OnlyCreatorAccessMixin, View
 from knowledge.forms import *
 
 
@@ -137,3 +138,27 @@ class ChapterDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomD
 
     def get_success_url(self):
         return reverse("book-detail", args=[self.kwargs['book'], ])
+
+
+class RandomBookRedirect(PermissionRequiredMixin, View):
+    http_method_names = ['get']
+    permission_required = perm
+
+    def get(self, *args, **kwargs):
+        books_qs = Book.objects.filter(created_by=self.request.user)
+        instances_count = books_qs.count()
+        random_index = random.randrange(0, instances_count, 1)
+        instance = books_qs[random_index]
+        return HttpResponseRedirect(instance.get_absolute_url())
+
+
+class RandomChapterRedirect(PermissionRequiredMixin, View):
+    http_method_names = ['get']
+    permission_required = perm
+
+    def get(self):
+        chapter_qs = Chapter.objects.filter(created_by=self.request.user).exclude(summary__exact="")
+        instances_count = chapter_qs.count()
+        random_index = random.randrange(0, instances_count, 1)
+        instance = chapter_qs[random_index]
+        return HttpResponseRedirect(instance.get_absolute())

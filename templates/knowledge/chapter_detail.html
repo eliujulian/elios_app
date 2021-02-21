@@ -6,35 +6,45 @@
 
         <div class="card">
             <div class="card-header">
-                <h3>{{ object }}</h3>
-                <a href="{% url 'book-detail' object.book.id_slug %}">{{ object.book }}</a>
+                <h3 class="card-title">{{ object }}</h3>
+                <a  class="card-subtitle text-muted" href="{% url 'book-detail' object.book.id_slug %}">{{ object.book }}</a>
             </div>
             <div class="card-body">
-                {% if object.order_num > 0 %}
-                    <a href="{% url 'chapter-detail' object.book.id_slug object.order_num_minus_one %}">Vorheriges Kapitel</a>
-                {% endif %}
-
-                {% if object.order_num_plus_one < object.book.chapter_set.count %}
-                    <a href="{% url 'chapter-detail' object.book.id_slug object.order_num_plus_one %}">Nächstes Kapitel</a>
-                {% endif %}
-
-                <hr>
-                {{ object.summary|linebreaks }}
-
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        {% if object.order_num > 0 %}
+                            <a class="card-link" href="{% url 'chapter-detail' object.book.id_slug object.order_num_minus_one %}">Vorheriges Kapitel</a>
+                        {% endif %}
+                        {% if object.order_num_plus_one < object.book.chapter_set.count %}
+                            <a class="card-link" href="{% url 'chapter-detail' object.book.id_slug object.order_num_plus_one %}">Nächstes Kapitel</a>
+                        {% endif %}
+                    </li>
+                <li class="list-group-item">
+                    {{ object.summary|linebreaks }}
+                </li>
                 {% if object.source %}
-                   <strong>Fundstelle:</strong>
+                    <li class="list-group-item">
+                    <strong>Fundstelle:</strong>
                     {{ object.source }}
+                    </li>
                 {% endif %}
 
-                <hr>
-                <a href="{% url 'chapter-update' object.book.id_slug object.order_num %}">
-                    <button class="btn btn-primary">Bearbeiten</button>
-                </a>
+                </ul>
 
-                <a href="{%  url 'chapter-delete' object.book.id_slug object.order_num %}">
-                    <button class="btn btn-danger">Löschen</button>
-                </a>
+
+
+
+
             </div>
+                <div class="card-footer">
+                    <a href="{% url 'chapter-update' object.book.id_slug object.order_num %}">
+                        <button class="btn btn-primary">Bearbeiten</button>
+                    </a>
+
+                    <a href="{%  url 'chapter-delete' object.book.id_slug object.order_num %}">
+                        <button class="btn btn-danger">Löschen</button>
+                    </a>
+                </div>
         </div>
 
 {% endblock %}
