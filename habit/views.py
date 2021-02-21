@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.forms import modelform_factory
+from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomDetailView, CustomUpdateView
 from habit.forms import *
@@ -34,7 +35,10 @@ class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
     def get_form_class(self):
         if self.request.GET.get('field', False):
             field = self.request.GET.get('field', False)
-            return modelform_factory(HabitProfile, fields=[field, ], labels={field: self.model.LABELS[field]})
+            return modelform_factory(HabitProfile,
+                                     fields=[field, ],
+                                     labels={field: self.model.LABELS[field]},
+                                     widgets={field: forms.Textarea(attrs={"cols": 80, "rows": 20})})
         else:
             return HabitProfileForm
 
