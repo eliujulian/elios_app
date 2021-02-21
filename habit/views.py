@@ -29,6 +29,7 @@ class HabitProfileView(PermissionRequiredMixin, CustomDetailView):
 class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = HabitProfile
     permission_required = perm
+    template_name = "habit/hapitprofile_update.html"
 
     def get_form_class(self):
         if self.request.GET.get('field', False):
@@ -36,6 +37,15 @@ class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
             return modelform_factory(HabitProfile, fields=[field, ], labels={field: self.model.LABELS[field]})
         else:
             return HabitProfileForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.GET.get('field', False):
+            field = self.request.GET.get('field', False)
+            print(field)
+            context['get_parameter'] = f"field={field}"
+        print(context)
+        return context
 
     def get_object(self, queryset=None):
         return HabitProfile.objects.get(profile_for=self.request.user)

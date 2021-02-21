@@ -20,6 +20,7 @@ from habit.views import *
 basic_urls = [
     path("", login_required(test_view, login_url="login-url"), name="landingpage"),
     path("success/", MessageView.as_view(), name="message-success-public"),
+    path("message/", login_required(MessageView.as_view()), name="message"),
     path("failure/", MessageView.as_view(), name="message-failure-public"),
     path("login/", LoginView.as_view(template_name="application/login.html"), name="login-url"),
     path("logout/", LogoutView.as_view(template_name="application/login.html"), name="logout-url"),

@@ -147,6 +147,8 @@ class RandomBookRedirect(PermissionRequiredMixin, View):
     def get(self, *args, **kwargs):
         books_qs = Book.objects.filter(created_by=self.request.user)
         instances_count = books_qs.count()
+        if instances_count == 0:
+            return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch an.")
         random_index = random.randrange(0, instances_count, 1)
         instance = books_qs[random_index]
         return HttpResponseRedirect(instance.get_absolute_url())
@@ -159,6 +161,8 @@ class RandomChapterRedirect(PermissionRequiredMixin, View):
     def get(self):
         chapter_qs = Chapter.objects.filter(created_by=self.request.user).exclude(summary__exact="")
         instances_count = chapter_qs.count()
+        if instances_count == 0:
+            return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch mit Kapiteln an.")
         random_index = random.randrange(0, instances_count, 1)
         instance = chapter_qs[random_index]
         return HttpResponseRedirect(instance.get_absolute())
