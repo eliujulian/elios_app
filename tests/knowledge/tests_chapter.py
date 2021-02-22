@@ -29,6 +29,19 @@ class BookTest(ChapterTests):
         self.assertEqual(self.book.chapter_set.all().count(), 4)
 
 
+class ChapterModelTest(ChapterTests):
+    def test_chapter_model(self):
+        chapter1 = Chapter.objects.get(id=1)
+        chapter2 = Chapter.objects.get(id=2)
+        self.assertEqual(chapter1.order_num_plus_one(), 1)
+        self.assertEqual(chapter1.order_num_minus_one(), -1)
+        self.assertFalse(chapter1.previous_chapter())
+        self.assertTrue(chapter2.previous_chapter())
+        self.assertTrue(chapter2.next_chapter())
+        self.assertIsInstance(chapter1.next_chapter(), Chapter)
+        self.assertIsInstance(chapter2.next_chapter(), Chapter)
+
+
 class ChapterCreateTests(ChapterTests):
     def test_not_logged_in(self):
         self.client.logout()
@@ -135,3 +148,12 @@ class ChapterDeleteTest(ChapterTests):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.book.chapter_set.all().count(), 3)
         self.assertEqual(self.book.chapter_set.get(order_num=1).title, "Third")
+
+
+class ChapterRandomTest(ChapterTests):
+    def test_random(self):
+        self.assertTrue(self.book.chapter_set.all().count() > 3)
+        response = self.client.get(reverse("chapter-random"))
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertIn('chapter', response.url)
+        self.assertNotIn('message', response.url)

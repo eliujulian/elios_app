@@ -137,3 +137,11 @@ class BookDeleteTest(BookTests):
         self.client.login(username="bdam", password="123456")
         self.assertEqual(self.client.get(reverse("book-delete", args=[self.book.id_slug])).status_code, 401)
         self.assertEqual(self.client.post(reverse("book-delete", args=[self.book.id_slug])).status_code, 401)
+
+
+class RandomViewTest(BookTests):
+    def test_random(self):
+        response = self.client.get(reverse("book-random"))
+        self.assertEqual(response.status_code, 302)
+        self.assertNotIn('message', response.url)
+        self.assertIn('book', response.url)

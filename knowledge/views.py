@@ -144,25 +144,39 @@ class RandomBookRedirect(PermissionRequiredMixin, View):
     http_method_names = ['get']
     permission_required = perm
 
-    def get(self, *args, **kwargs):
+    def get_random_book(self):
         books_qs = Book.objects.filter(created_by=self.request.user)
         instances_count = books_qs.count()
         if instances_count == 0:
-            return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch an.")
+            return None
         random_index = random.randrange(0, instances_count, 1)
         instance = books_qs[random_index]
-        return HttpResponseRedirect(instance.get_absolute_url())
+        return instance
+
+    def get(self, *args, **kwargs):
+        instance = self.get_random_book()
+        if not instance:
+            return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch an.")
+        else:
+            return HttpResponseRedirect(instance.get_absolute_url())
 
 
 class RandomChapterRedirect(PermissionRequiredMixin, View):
     http_method_names = ['get']
     permission_required = perm
 
-    def get(self):
-        chapter_qs = Chapter.objects.filter(created_by=self.request.user).exclude(summary__exact="")
+    def get_random_chapter(self):
+        chapter_qs = Chapter.objects.filter(created_by=self.request.user).exclude(summary__isnull=True)
         instances_count = chapter_qs.count()
         if instances_count == 0:
-            return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch mit Kapiteln an.")
+            return None
         random_index = random.randrange(0, instances_count, 1)
         instance = chapter_qs[random_index]
-        return HttpResponseRedirect(instance.get_absolute())
+        return instance
+
+    def get(self, *args, **kwargs):
+        instance = self.get_random_chapter()
+        if not instance:
+            return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch mit Kapiteln an.")
+        else:
+            return HttpResponseRedirect(instance.get_absolute_url())
