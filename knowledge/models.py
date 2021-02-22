@@ -76,6 +76,12 @@ class Chapter(AbstractBaseModel):
         else:
             return self.book.chapter_set.filter(order_num=self.order_num - 1).first()
 
+    def is_first(self):
+        if self.order_num <= 0:
+            return True
+        else:
+            return False
+
     def is_last(self):
         if self.order_num + 1 >= self.book.chapter_set.all().count():
             return True
