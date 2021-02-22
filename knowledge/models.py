@@ -42,6 +42,28 @@ class Chapter(AbstractBaseModel):
     def order_num_minus_one(self):
         return self.order_num - 1
 
+    def order_one_up(self):
+        if self.order_num + 1 == self.book.chapter_set.all().count():
+            return None
+        else:
+            next_chapter = self.next_chapter()
+            next_chapter.order_num = self.order_num
+            next_chapter.save()
+            self.order_num += 1
+            self.save()
+            return True
+
+    def order_num_one_down(self):
+        if self.order_num <= 0:
+            return None
+        else:
+            previous_chapter = self.previous_chapter()
+            previous_chapter.order_num = self.order_num
+            previous_chapter.save()
+            self.order_num -= 1
+            self.save()
+            return True
+
     def next_chapter(self):
         if self.order_num + 1 == self.book.chapter_set.all().count():
             return None
@@ -53,6 +75,12 @@ class Chapter(AbstractBaseModel):
             return None
         else:
             return self.book.chapter_set.filter(order_num=self.order_num - 1).first()
+
+    def is_last(self):
+        if self.order_num + 1 >= self.book.chapter_set.all().count():
+            return True
+        else:
+            return False
 
     def get_absolute_url(self):
         return reverse("chapter-detail", args=[self.book.id_slug, self.order_num])

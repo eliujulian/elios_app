@@ -41,6 +41,12 @@
                         <button class="btn btn-primary">Bearbeiten</button>
                     </a>
 
+                    {% if object.is_last %}
+                        <a href="{% url 'chapter-create' object.book.id_slug %}">
+                            <button class="btn btn-primary">Neues Kapitel</button>
+                        </a>
+                    {% endif %}
+
                     <a href="{%  url 'chapter-delete' object.book.id_slug object.order_num %}">
                         <button class="btn btn-danger">Löschen</button>
                     </a>

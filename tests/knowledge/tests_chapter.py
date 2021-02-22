@@ -157,3 +157,24 @@ class ChapterRandomTest(ChapterTests):
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertIn('chapter', response.url)
         self.assertNotIn('message', response.url)
+
+
+class ChapterChangeOrderTest(ChapterTests):
+    def test_up(self):
+        response = self.client.get(reverse("chapter-up", args=[self.book.id_slug, 0, ]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.book.chapter_set.all().first().title, "Second")
+        self.assertEqual(self.book.chapter_set.all().last().title, "Fourth")
+        response = self.client.get(reverse("chapter-up", args=[self.book.id_slug, 3, ]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.book.chapter_set.all().last().title, "Fourth")
+
+    def test_down(self):
+        response = self.client.get(reverse("chapter-down", args=[self.book.id_slug, 1, ]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.book.chapter_set.all().first().title, "Second")
+
+    def test_down_first(self):
+        self.assertEqual(self.book.chapter_set.all().first().title, "First")
+        response = self.client.get(reverse("chapter-down", args=[self.book.id_slug, 0, ]))
+        self.assertEqual(self.book.chapter_set.all().first().title, "First")

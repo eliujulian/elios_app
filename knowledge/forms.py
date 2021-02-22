@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django import forms
 from knowledge.models import Book, Chapter
 
 
@@ -19,6 +20,10 @@ class BookForm(ModelForm):
             'summary': 'Zusammenfassung',
             'source': 'Fundstelle'
         }
+        widgets = {
+            'summary': forms.Textarea(attrs={'cols': 70, 'rows': 30})
+        }
+
 
 
 class ChapterForm(ModelForm):
@@ -33,4 +38,7 @@ class ChapterForm(ModelForm):
             'title': 'Titel',
             'summary': 'Zusammenfassung',
             'source': 'Fundstelle'
+        }
+        widgets = {
+            'summary': forms.Textarea(attrs={'cols': 70, 'rows': 30})
         }

@@ -180,3 +180,17 @@ class RandomChapterRedirect(PermissionRequiredMixin, View):
             return HttpResponseRedirect(reverse('message') + "?message=Bitte leg zuerst ein Buch mit Kapiteln an.")
         else:
             return HttpResponseRedirect(instance.get_absolute_url())
+
+
+class ChapterOrderUpRedirect(ChapterDetailView):
+    def get(self, *args, **kwargs):
+        instance = self.get_object()
+        instance.order_one_up()
+        return HttpResponseRedirect(instance.get_absolute_url())
+
+
+class ChapterOderDownRedirect(ChapterDetailView):
+    def get(self, *args, **kwargs):
+        instance = self.get_object()
+        instance.order_num_one_down()
+        return HttpResponseRedirect(instance.get_absolute_url())
