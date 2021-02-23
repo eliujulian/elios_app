@@ -17,6 +17,18 @@
                             <a href="{% url 'chapter-detail' object.id_slug chapter.order_num %}">{{ chapter }}</a><br>
                         </li>
                         {{ chapter.summary|linebreaks }}
+                        {% if not chapter.order_num == 0 %}
+                        <a href="{% url 'chapter-down' object.id_slug chapter.order_num %}">
+                            <i class="fas fa-chevron-up"> Nach vorne</i><br>
+                        </a>
+                        {% endif %}
+
+                        {% if not chapter.order_num_plus_one == object.no_chapters %}
+                        <a href="{% url 'chapter-up' object.id_slug chapter.order_num %}">
+                            <i class="fas fa-chevron-down"> Nach hinten</i>
+                        </a>
+                        {% endif %}
+
                     {% endfor %}
                 </ol>
 

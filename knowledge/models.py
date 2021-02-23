@@ -15,6 +15,11 @@ class Book(AbstractBaseModel):
     summary = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=160, null=True, blank=True)
 
+    def no_chapters(self):
+        result = self.chapter_set.all().count()
+        print(result)
+        return result
+
     def get_absolute_url(self):
         return reverse('book-detail', args=[self.id_slug, ])
 
@@ -43,7 +48,7 @@ class Chapter(AbstractBaseModel):
         return self.order_num - 1
 
     def order_one_up(self):
-        if self.order_num + 1 == self.book.chapter_set.all().count():
+        if self.is_last():
             return None
         else:
             next_chapter = self.next_chapter()
@@ -54,7 +59,7 @@ class Chapter(AbstractBaseModel):
             return True
 
     def order_num_one_down(self):
-        if self.order_num <= 0:
+        if self.is_first():
             return None
         else:
             previous_chapter = self.previous_chapter()
@@ -65,13 +70,13 @@ class Chapter(AbstractBaseModel):
             return True
 
     def next_chapter(self):
-        if self.order_num + 1 == self.book.chapter_set.all().count():
+        if self.is_last():
             return None
         else:
             return self.book.chapter_set.filter(order_num=self.order_num + 1).first()
 
     def previous_chapter(self):
-        if self.order_num == 0:
+        if self.is_first():
             return None
         else:
             return self.book.chapter_set.filter(order_num=self.order_num - 1).first()
