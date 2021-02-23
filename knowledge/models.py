@@ -16,9 +16,7 @@ class Book(AbstractBaseModel):
     source = models.CharField(max_length=160, null=True, blank=True)
 
     def no_chapters(self):
-        result = self.chapter_set.all().count()
-        print(result)
-        return result
+        return self.chapter_set.all().count()
 
     def get_absolute_url(self):
         return reverse('book-detail', args=[self.id_slug, ])
