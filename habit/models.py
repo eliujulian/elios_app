@@ -39,9 +39,11 @@ class Goal(AbstractBaseModel):
     class Meta:
         abstract = True
 
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True, null=True)
     sphere = models.IntegerField(choices=SPHERE_OF_LIFE_DE, default=1)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
@@ -76,6 +78,7 @@ class Habit(AbstractBaseModel):
         (31, 'Letzter Tag')
     )
 
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True, null=True)
     sphere = models.IntegerField(choices=SPHERE_OF_LIFE_DE, default=1)
