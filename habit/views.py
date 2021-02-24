@@ -2,7 +2,8 @@ from django.utils import timezone
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from core.views import CustomDetailView, CustomUpdateView
+from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView, \
+    OnlyCreatorAccessMixin
 from habit.forms import *
 
 
@@ -53,3 +54,45 @@ class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
 
     def get_object(self, queryset=None):
         return HabitProfile.objects.get(profile_for=self.request.user)
+
+
+class GoalCreateView(PermissionRequiredMixin, CustomCreateView):
+    model = Goal
+    permission_required = perm
+    form_class = GoalForm
+
+    def form_valid(self, form):
+        form.instance.id_slug = self.model.get_id_slug(10)
+        return super().form_valid(form)
+
+
+class GoalDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
+    model = Goal
+    permission_required = perm
+    slug_field = 'id_slug'
+    http_method_names = ['get']
+
+
+class GoalUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
+    model = Goal
+    permission_required = perm
+    form_class = GoalForm
+    slug_field = 'id_slug'
+
+
+class GoalDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
+    model = Goal
+    permission_required = perm
+    slug_field = 'id_slug'
+
+    def get_success_url(self):
+        return reverse("goals")
+
+
+class GoalListView(PermissionRequiredMixin, CustomListView):
+    model = Goal
+    permission_required = perm
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return Goal.objects.filter(created_by=self.request.user)

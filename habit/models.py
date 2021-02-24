@@ -42,6 +42,12 @@ class Goal(AbstractBaseModel):
     sphere = models.IntegerField(choices=SPHERE_OF_LIFE_DE, default=1)
     is_active = models.BooleanField(default=True)
 
+    def get_absolute_url(self):
+        return reverse("goal-detail", args=[self.id_slug, ])
+
+    def get_create_url(self):
+        return reverse("goal-create")
+
     def __str__(self):
         return self.title
 

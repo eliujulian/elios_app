@@ -7,3 +7,18 @@ class HabitProfileForm(ModelForm):
         model = HabitProfile
         fields = '__all__'
 
+class GoalForm(ModelForm):
+    class Meta:
+        model = Goal
+        fields = [
+            'sphere',
+            'title',
+            'description',
+            'is_active'
+        ]
+        labels = {
+            'sphere': 'Bereich',
+            'title': 'Titel',
+            'description': 'Beschreibung',
+            'is_active': 'Aktiv'
+        }

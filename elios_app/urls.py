@@ -59,6 +59,11 @@ personality_urls = [
 habit_urls = [
     path("habit/", login_required(HabitProfileView.as_view()), name="habit"),
     path("habit/update/", login_required(HabitProfileUpdateView.as_view()), name="habit-update"),
+    path("habit/goals/", login_required(GoalListView.as_view()), name="goals"),
+    path("habit/goal/create/", login_required(GoalCreateView.as_view()), name="goal-create"),
+    path("habit/goal/<slug>/", login_required(GoalDetailView.as_view()), name="goal-detail"),
+    path("habit/goal/<slug>/update/", login_required(GoalUpdateView.as_view()), name="goal-update"),
+    path("habit/goal/<slug>/delete/", login_required(GoalDeleteView.as_view()), name="goal-delete"),
 ]
 
 knowledge_urls = [

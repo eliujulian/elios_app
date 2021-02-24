@@ -41,6 +41,8 @@
         {% if perms.habit.habit_app %}
             <hr>
             <a href="{% url 'habit' %}">Visionen</a>
+            <a href="{% url 'goals' %}">Ziele</a>
+            <a href="{% url 'goal-create' %}">Neues Ziel</a>
         {% endif %}
 
         {% if perms.knowledge.knowledge_app %}
