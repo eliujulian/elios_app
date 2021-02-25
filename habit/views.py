@@ -71,6 +71,7 @@ class GoalDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeta
     permission_required = perm
     slug_field = 'id_slug'
     http_method_names = ['get']
+    template_name = 'habit/goal_detail.html'
 
 
 class GoalUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):

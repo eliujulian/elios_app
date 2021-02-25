@@ -1,0 +1,24 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ object }} | {{ object.get_sphere_display }}</h3>
+            </div>
+            <div class="card-body">
+                {{ object.description|linebreaks }}
+
+            <a href="{% url 'goal-update' object.id_slug %}">
+                <button class="btn btn-primary">Bearbeiten</button>
+            </a>
+            <a href="{% url 'goal-delete' object.id_slug %}">
+                <button class="btn btn-danger">Löschen</button>
+            </a>
+
+            </div>
+        </div>
+
+{% endblock %}
