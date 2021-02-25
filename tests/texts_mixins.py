@@ -13,6 +13,9 @@ class CreateStandardGroupsMixin:
         group_standard.permissions.add(Permission.objects.get(
             content_type=ContentType.objects.get_for_model(PermissionRegister),
             codename="knowledge_app"))
+        group_standard.permissions.add(Permission.objects.get(
+            content_type=ContentType.objects.get_for_model(PermissionRegister),
+            codename="habit_app"))
         group_health = Group.objects.create(**{'name': "HealthApp"})
         group_health.permissions.add(Permission.objects.get(
             content_type=ContentType.objects.get_for_model(PermissionRegister),
