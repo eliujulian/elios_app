@@ -3,6 +3,7 @@ from django.shortcuts import reverse, get_object_or_404
 from django.http import HttpResponseRedirect
 from tests.texts_mixins import *
 from core.views import AccountRegisterView
+from habit.models import HabitProfile
 
 
 class AccountRegisterViewTest(CreateStandardGroupsMixin, TestCase):
@@ -20,6 +21,7 @@ class AccountRegisterViewTest(CreateStandardGroupsMixin, TestCase):
         self.assertIn("success", response.url)
         self.assertIn("message", response.url)
         self.assertTrue(new_user.check_password(password))
+        self.assertEqual(HabitProfile.objects.filter(profile_for=new_user).count(), 1)
 
         # Try login for not confirmed user -> should not work
         new_response = self.client.post(reverse("login-url"), {"username": username, "password": password})

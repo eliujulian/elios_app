@@ -99,12 +99,12 @@ class AccountUpdateViewTest(CreateUserMixin, TestCase):
         self.assertIn("adam", response.url)
 
     def test_post_response_same_user_change_first_name(self):
-        self.assertEqual(User.objects.get(username="adam").first_name, "")
-        response = self.client.post(reverse("account-update", kwargs={"slug": "adam"}), data={'first_name':"Adam"})
+        self.assertEqual(User.objects.get(username="adam").first_name, "Adam")
+        response = self.client.post(reverse("account-update", kwargs={"slug": "adam"}), data={'first_name':"Aron"})
         self.assertEqual(response.status_code, 302)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertIn("adam", response.url)
-        self.assertEqual(User.objects.get(username="adam").first_name, "Adam")
+        self.assertEqual(User.objects.get(username="adam").first_name, "Aron")
 
 
 class AccountDeleteViewTest(CreateUserMixin, TestCase):

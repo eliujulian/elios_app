@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.test import TestCase
 from tests.texts_mixins import *
 from habit.views import *
