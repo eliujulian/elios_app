@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -17,14 +16,6 @@ class HabitProfileView(PermissionRequiredMixin, CustomDetailView):
     permission_required = perm
 
     def get_object(self, queryset=None):
-        if HabitProfile.objects.filter(profile_for=self.request.user).count() == 0:
-            HabitProfile.objects.create(
-                **{'created_by': self.request.user,
-                   'timestamp_created': timezone.now(),
-                   'timestamp_changed': timezone.now(),
-                   'profile_for': self.request.user
-                   }
-            )
         return HabitProfile.objects.get(profile_for=self.request.user)
 
 

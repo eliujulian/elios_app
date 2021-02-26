@@ -37,6 +37,15 @@ def test_view(request):
             group.permissions.add(perm)
             print("Created Group: ", group)
 
+        if Group.objects.filter(name="HabitApp").count() == 0:
+            perm = Permission.objects.get(
+                content_type=ContentType.objects.get_for_model(PermissionRegister),
+                codename="habit_app"
+            )
+            group = Group.objects.create(**{'name': "HabitApp"})
+            group.permissions.add(perm)
+            print("Created Group: ", group)
+
     context = dict()
     context['user'] = request.user
     context['data'] = f"You are logged in as {request.user} ({request.user.username})."

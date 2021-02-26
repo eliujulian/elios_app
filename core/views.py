@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from .forms import *
 from elios_app import settings
+from habit.models import HabitProfile
 
 
 class CustomCreateView(CreateView):
@@ -95,8 +96,18 @@ class AccountRegisterView(CreateView):
         self.object.set_password(raw_password=form.data['password'])
         self.object.save()
 
+        HabitProfile.objects.create(
+            **{'created_by': self.object,
+               'timestamp_created': timezone.now(),
+               'timestamp_changed': timezone.now(),
+               'profile_for': self.object
+               }
+        )
+
         # add for all new users to group "standard-users
         Group.objects.get(name="StandardUsers").user_set.add(self.object)
+        Group.objects.get(name="PersonalityApp").user_set.add(self.object)
+        Group.objects.get(name="HabitApp").user_set.add(self.object)
 
         confirm_url = self.object.get_confirm_url()
 
