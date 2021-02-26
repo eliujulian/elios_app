@@ -11,6 +11,9 @@
             <div class="card-body">
                 {{ object.description|linebreaks }}
 
+            <a href="{% url 'goals' %}">
+                <button class="btn btn-primary">Zur Übersicht</button>
+            </a>
             <a href="{% url 'goal-update' object.id_slug %}">
                 <button class="btn btn-primary">Bearbeiten</button>
             </a>
