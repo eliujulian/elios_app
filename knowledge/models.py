@@ -107,7 +107,11 @@ class KnowledgeNode(AbstractBaseModel):
 
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
     father_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.SET_NULL, null=True, blank=True)
-    connections = models.ManyToManyField(to="KnowledgeNode")
+    connections = models.ManyToManyField(
+        to="KnowledgeNode",
+        through="KnowledgeConnection",
+        through_fields=('from_node', 'to_node')
+    )
     title = models.CharField(max_length=160)
     summary = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=160, null=True, blank=True)
@@ -121,5 +125,8 @@ class KnowledgeConnection(AbstractBaseModel):
     class Meta:
         abstract = True
 
-    start_node = models.ForeignKey(to=KnowledgeNode, on_delete=models.CASCADE)
-    end_node = models.ForeignKey(to=KnowledgeNode, on_delete=models.CASCADE)
+    from_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.CASCADE)
+    to_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.from_node} - {self.to_node}"
