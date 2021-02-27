@@ -63,3 +63,32 @@ class PersonalityNote(AbstractNoteModel):
 
     def __str__(self):
         return self.title
+
+
+class Journal(AbstractBaseModel):
+    class Meta:
+        abstract = True
+
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
+    title = models.CharField(max_length=160)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class JournalEntry(AbstractBaseModel):
+    class Meta:
+        abstract = True
+
+    def get_choices(self):
+        return {'created_by': self.created_by}
+
+    id_slug = models.CharField(max_length=18, unique=True, editable=False)
+    date = models.DateField()
+    title = models.CharField(max_length=160)
+    description = models.TextField(blank=True, null=True)
+    journal = models.ForeignKey(Journal, models.SET_NULL, limit_choices_to=get_choices)
+
+    def __str__(self):
+        return f"{self.date} - {self.title}"
