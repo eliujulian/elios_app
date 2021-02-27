@@ -32,8 +32,11 @@ class Chapter(AbstractBaseModel):
     class Meta:
         ordering = ['order_num']
 
+    def get_choices(self):
+        return {'created_by': self.created_by}
+
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, editable=False)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, limit_choices_to=get_choices, editable=False)
     title = models.CharField(max_length=160)
     summary = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=160, null=True, blank=True)
@@ -105,12 +108,17 @@ class KnowledgeNode(AbstractBaseModel):
     class Meta:
         abstract = True
 
+    def limit_choices_father_node(self):
+        return {'created_by': self.created_by}
+
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
-    father_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.SET_NULL, null=True, blank=True)
+    father_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.SET_NULL, null=True, blank=True,
+                                    limit_choices_to=limit_choices_father_node)
     connections = models.ManyToManyField(
         to="KnowledgeNode",
         through="KnowledgeConnection",
-        through_fields=('from_node', 'to_node')
+        through_fields=('from_node', 'to_node'),
+        limit_choices_to=limit_choices_father_node,
     )
     title = models.CharField(max_length=160)
     summary = models.TextField(null=True, blank=True)
@@ -125,8 +133,8 @@ class KnowledgeConnection(AbstractBaseModel):
     class Meta:
         abstract = True
 
-    from_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.CASCADE)
-    to_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.CASCADE)
+    from_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.CASCADE, editable=False)
+    to_node = models.ForeignKey(to="KnowledgeNode", on_delete=models.CASCADE, editable=False)
 
     def __str__(self):
         return f"{self.from_node} - {self.to_node}"
