@@ -55,9 +55,6 @@ class Goal(AbstractBaseModel):
 
 
 class Habit(AbstractBaseModel):
-    class Meta:
-        abstract = True
-
     INTERVAL = (
         (1, 'täglich'),
         (2, 'wöchentlich'),
@@ -173,9 +170,6 @@ class Habit(AbstractBaseModel):
 
 
 class HabitEvent(AbstractBaseModel):
-    class Meta:
-        abstract = True
-
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
     habit = models.ForeignKey(Habit, models.CASCADE)
     title = models.CharField(max_length=160)
