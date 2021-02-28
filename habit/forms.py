@@ -7,6 +7,7 @@ class HabitProfileForm(ModelForm):
         model = HabitProfile
         fields = '__all__'
 
+
 class GoalForm(ModelForm):
     class Meta:
         model = Goal

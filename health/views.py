@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import reverse, get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomListView, CustomDetailView, CustomCreateView, CustomUpdateView, CustomDeleteView

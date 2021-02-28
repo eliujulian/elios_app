@@ -1,5 +1,4 @@
 from django.shortcuts import reverse, get_object_or_404
-from django.utils import timezone
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView
 from personality.forms import *

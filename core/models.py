@@ -41,10 +41,12 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("user-detail", kwargs={"slug": self.username})
 
-    def get_update_url(self):
+    @staticmethod
+    def get_update_url():
         return reverse("account-update")
 
-    def get_delete_url(self):
+    @staticmethod
+    def get_delete_url():
         return reverse("account-delete")
 
     def __str__(self):

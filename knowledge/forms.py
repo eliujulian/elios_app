@@ -25,7 +25,6 @@ class BookForm(ModelForm):
         }
 
 
-
 class ChapterForm(ModelForm):
     class Meta:
         model = Chapter
