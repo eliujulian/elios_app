@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views import View
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
@@ -67,12 +67,8 @@ class UserDetailView(PermissionRequiredMixin, CustomDetailView):
     slug_field = "username"
     permission_required = 'core.landingpage_right'
 
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if not instance.is_active:
-            return HttpResponseNotFound("Not found.")
-        else:
-            return super().get(request, *args, **kwargs)
+    def get_object(self, queryset=None):
+        return get_object_or_404(User, username=self.kwargs['slug'], is_active=True)
 
 
 class MessageView(TemplateView):
