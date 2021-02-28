@@ -14,10 +14,6 @@ class BookCreateView(PermissionRequiredMixin, CustomCreateView):
     permission_required = perm
     form_class = BookForm
 
-    def form_valid(self, form):
-        form.instance.id_slug = self.model.get_id_slug(10)
-        return super().form_valid(form)
-
 
 class BookListView(PermissionRequiredMixin, CustomListView):
     model = Book
@@ -88,9 +84,8 @@ class ChapterCreateView(PermissionRequiredMixin, CustomCreateView):
         return super(ChapterCreateView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.instance.id_slug = self.model.get_id_slug(10)
         book = Book.objects.get(id_slug=self.kwargs['book'])
-        form.instance.book = Book.objects.get(id_slug=self.kwargs['book'])
+        form.instance.book = book
         form.instance.order_num = Chapter.objects.filter(book=book).count()
         return super().form_valid(form)
 

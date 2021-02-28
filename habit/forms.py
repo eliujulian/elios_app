@@ -23,3 +23,9 @@ class GoalForm(ModelForm):
             'description': 'Beschreibung',
             'is_active': 'Aktiv'
         }
+
+
+class HabitForm(ModelForm):
+    class Meta:
+        model = Habit
+        fields = '__all__'

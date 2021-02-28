@@ -31,7 +31,7 @@ class HabitProfile(AbstractBaseModel):
     }
 
     def get_absolute_url(self):
-        return reverse("habit")
+        return reverse("habitprofile")
 
     def __str__(self):
         return f"HabitProfile for {self.profile_for}"
@@ -96,7 +96,9 @@ class Habit(AbstractBaseModel):
     sphere = models.IntegerField(choices=SPHERE_OF_LIFE_DE, default=1)
     is_active = models.BooleanField(default=True)
     is_good_habit = models.BooleanField(default=True)
-    goal = models.ForeignKey(to=Goal, on_delete=models.SET_NULL, limit_choices_to=get_choices, null=True, blank=True)
+    goal = models.ForeignKey(to=Goal, on_delete=models.SET_NULL,
+                             # limit_choices_to=get_choices,
+                             null=True, blank=True)
     link = models.URLField(null=True, blank=True)
 
     # Interval
@@ -118,6 +120,12 @@ class Habit(AbstractBaseModel):
 
     # Privacy - Sharing with other users
     privacy = models.IntegerField(choices=PRIVACY_OPTIONS, default=PRIVACY_OPTIONS[0][0])
+
+    def get_create_url(self):
+        return reverse("habit-create")
+
+    def get_absolute_url(self):
+        return reverse("habit-detail", args=[self.id_slug, ])
 
     def create_event(self, date, status):
         instance = HabitEvent.objects.create(

@@ -32,7 +32,6 @@ class PersonalityNoteCreateView(PermissionRequiredMixin, CustomCreateView):
 
     def form_valid(self, form):
         form.instance.note_about = self.request.user.personalityprofile
-        form.instance.id_slug = self.model.get_id_slug(10)
         return super().form_valid(form)
 
 

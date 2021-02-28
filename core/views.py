@@ -25,6 +25,7 @@ class CustomCreateView(CreateView):
         form.instance.created_by = self.request.user
         form.instance.timestamp_created = timezone.now()
         form.instance.timestamp_changed = timezone.now()
+        form.instance.id_slug = self.model.get_id_slug(10)
         return super().form_valid(form)
 
     def get_initial(self):

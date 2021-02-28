@@ -54,10 +54,6 @@ class GoalCreateView(PermissionRequiredMixin, CustomCreateView):
     permission_required = perm
     form_class = GoalForm
 
-    def form_valid(self, form):
-        form.instance.id_slug = self.model.get_id_slug(10)
-        return super().form_valid(form)
-
 
 class GoalDetailView(PermissionRequiredMixin, CustomDetailView):
     model = Goal
@@ -99,3 +95,44 @@ class GoalListView(PermissionRequiredMixin, CustomListView):
 
     def get_queryset(self):
         return Goal.objects.filter(created_by=self.request.user)
+
+
+class HabitListView(PermissionRequiredMixin, CustomListView):
+    model = Habit
+    permission_required = perm
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return Habit.objects.filter(created_by=self.request.user)
+
+
+class HabitDetailView(PermissionRequiredMixin, CustomDetailView):
+    model = Habit
+    permission_required = perm
+    http_method_names = ['get']
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+
+
+class HabitUpdateView(PermissionRequiredMixin, CustomUpdateView):
+    model = Habit
+    permission_required = perm
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+
+
+class HabitCreateView(PermissionRequiredMixin, CustomCreateView):
+    model = Habit
+    permission_required = perm
+    form_class = HabitForm
+
+
+class HabitDeleteView(PermissionRequiredMixin, CustomDeleteView):
+    model = Habit
+    permission_required = perm
+    slug_field = 'id_slug'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
