@@ -1,6 +1,6 @@
 import random
-from django.shortcuts import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import reverse, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from core.views import CustomCreateView, CustomListView, CustomDetailView, CustomUpdateView, CustomDeleteView, \
     OnlyCreatorAccessMixin, View
@@ -85,11 +85,11 @@ class ChapterDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomD
     template_name = 'knowledge/chapter_detail.html'
 
     def get_object(self, queryset=None):
-        book = Book.objects.get(id_slug=self.kwargs['book'])
-        return Chapter.objects.get(
-            book_id=book.id,
-            order_num=self.kwargs['order_num']
-        )
+        try:
+            book = Book.objects.get(id_slug=self.kwargs['book'])
+        except:
+            raise Http404(f"Book with the id_slug: {self.kwargs['book']} could not be found.")
+        return get_object_or_404(Chapter, book=book, order_num=self.kwargs['order_num'])
 
 
 class ChapterUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):

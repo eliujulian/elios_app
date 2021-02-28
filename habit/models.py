@@ -98,6 +98,7 @@ class Habit(AbstractBaseModel):
     description = models.TextField(blank=True, null=True)
     sphere = models.IntegerField(choices=SPHERE_OF_LIFE_DE, default=1)
     is_active = models.BooleanField(default=True)
+    is_good_habit = models.BooleanField(default=True)
     goal = models.ForeignKey(to=Goal, on_delete=models.SET_NULL, limit_choices_to=get_choices, null=True, blank=True)
     link = models.URLField(null=True, blank=True)
 
@@ -117,6 +118,9 @@ class Habit(AbstractBaseModel):
     total_counter = models.IntegerField(default=0, editable=False)
     last_day = models.DateField(null=True, blank=True, editable=False)
     last_day_action = models.IntegerField(choices=HABIT_ACTION, null=True, blank=True, editable=False)
+
+    # Privacy - Sharing with other users
+    privacy = models.IntegerField(choices=PRIVACY_OPTIONS, default=PRIVACY_OPTIONS[0][0])
 
     def create_event(self, date, status):
         instance = HabitEvent.objects.create(
