@@ -82,7 +82,7 @@ class BookDetailsTest(BookTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("book-detail", args=[self.book.id_slug]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse("book-detail", args=[self.book.id_slug]))
         self.assertEqual(response.status_code, 405)
 
@@ -107,8 +107,8 @@ class BookUpdateTest(BookTests):
     def test_wrong_user(self):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
-        self.assertEqual(self.client.get(reverse("book-update", args=[self.book.id_slug])).status_code, 401)
-        self.assertEqual(self.client.post(reverse("book-update", args=[self.book.id_slug])).status_code, 401)
+        self.assertEqual(self.client.get(reverse("book-update", args=[self.book.id_slug])).status_code, 404)
+        self.assertEqual(self.client.post(reverse("book-update", args=[self.book.id_slug])).status_code, 404)
 
 
 class BookDeleteTest(BookTests):
@@ -135,8 +135,8 @@ class BookDeleteTest(BookTests):
     def test_wrong_user(self):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
-        self.assertEqual(self.client.get(reverse("book-delete", args=[self.book.id_slug])).status_code, 401)
-        self.assertEqual(self.client.post(reverse("book-delete", args=[self.book.id_slug])).status_code, 401)
+        self.assertEqual(self.client.get(reverse("book-delete", args=[self.book.id_slug])).status_code, 404)
+        self.assertEqual(self.client.post(reverse("book-delete", args=[self.book.id_slug])).status_code, 404)
 
 
 class RandomViewTest(BookTests):

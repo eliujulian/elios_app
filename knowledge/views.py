@@ -1,9 +1,8 @@
 import random
 from django.shortcuts import reverse, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from core.views import CustomCreateView, CustomListView, CustomDetailView, CustomUpdateView, CustomDeleteView, \
-    OnlyCreatorAccessMixin, View
+from core.views import CustomCreateView, CustomListView, CustomDetailView, CustomUpdateView, CustomDeleteView, View
 from knowledge.forms import *
 
 
@@ -28,28 +27,46 @@ class BookListView(PermissionRequiredMixin, CustomListView):
         return Book.objects.filter(created_by=self.request.user)
 
 
-class BookDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
+class BookDetailView(PermissionRequiredMixin, CustomDetailView):
     model = Book
     permission_required = perm
     slug_field = 'id_slug'
     http_method_names = ['get']
     template_name = 'knowledge/book_detail.html'
 
+    def get_object(self, queryset=None):
+        if self.slug_field == 'id_slug':
+            return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+        else:
+            raise Exception("Please reconfigure")
 
-class BookUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
+
+class BookUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = Book
     permission_required = perm
     slug_field = 'id_slug'
     form_class = BookForm
 
+    def get_object(self, queryset=None):
+        if self.slug_field == 'id_slug':
+            return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+        else:
+            raise Exception("Please reconfigure")
 
-class BookDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
+
+class BookDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = Book
     permission_required = perm
     slug_field = 'id_slug'
 
     def get_success_url(self):
         return reverse("books")
+
+    def get_object(self, queryset=None):
+        if self.slug_field == 'id_slug':
+            return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+        else:
+            raise Exception("Please reconfigure")
 
 
 class ChapterCreateView(PermissionRequiredMixin, CustomCreateView):
@@ -61,13 +78,13 @@ class ChapterCreateView(PermissionRequiredMixin, CustomCreateView):
     def get(self, request, *args, **kwargs):
         book = Book.objects.get(id_slug=self.kwargs['book'])
         if book.created_by != self.request.user:
-            return HttpResponse("Unauthorized", status=401)
+            raise Http404()
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         book = Book.objects.get(id_slug=self.kwargs['book'])
         if book.created_by != self.request.user:
-            return HttpResponse("Unauthorized", status=401)
+            raise Http404()
         return super(ChapterCreateView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -78,7 +95,7 @@ class ChapterCreateView(PermissionRequiredMixin, CustomCreateView):
         return super().form_valid(form)
 
 
-class ChapterDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
+class ChapterDetailView(PermissionRequiredMixin, CustomDetailView):
     model = Chapter
     permission_required = perm
     http_method_names = ['get']
@@ -89,43 +106,43 @@ class ChapterDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomD
             book = Book.objects.get(id_slug=self.kwargs['book'])
         except:
             raise Http404(f"Book with the id_slug: {self.kwargs['book']} could not be found.")
-        return get_object_or_404(Chapter, book=book, order_num=self.kwargs['order_num'])
+        return get_object_or_404(Chapter, book=book, order_num=self.kwargs['order_num'], created_by=self.request.user)
 
 
-class ChapterUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
+class ChapterUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = Chapter
     permission_required = perm
     form_class = ChapterForm
 
     def get_object(self, queryset=None):
-        book = Book.objects.get(id_slug=self.kwargs['book'])
-        return Chapter.objects.get(
-            book_id=book.id,
-            order_num=self.kwargs['order_num']
-        )
+        try:
+            book = Book.objects.get(id_slug=self.kwargs['book'])
+        except:
+            raise Http404(f"Book with the id_slug: {self.kwargs['book']} could not be found.")
+        return get_object_or_404(Chapter, book=book, order_num=self.kwargs['order_num'], created_by=self.request.user)
 
 
-class ChapterDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
+class ChapterDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = Chapter
     permission_required = perm
 
     def get_object(self, queryset=None):
-        book = Book.objects.get(id_slug=self.kwargs['book'])
-        return Chapter.objects.get(
-            book_id=book.id,
-            order_num=self.kwargs['order_num']
-        )
+        try:
+            book = Book.objects.get(id_slug=self.kwargs['book'])
+        except:
+            raise Http404(f"Book with the id_slug: {self.kwargs['book']} could not be found.")
+        return get_object_or_404(Chapter, book=book, order_num=self.kwargs['order_num'], created_by=self.request.user)
 
     def post(self, request, *args, **kwargs):
         book = Book.objects.get(id_slug=self.kwargs['book'])
 
         if book.created_by != request.user:
-            return HttpResponse("Unauthorized", 401)
+            raise Http404()
 
-        instance = Chapter.objects.get(
-            book_id=book.id,
-            order_num=self.kwargs['order_num']
-        )
+        instance = get_object_or_404(self.model,
+                                     book=book,
+                                     order_num=self.kwargs['order_num'],
+                                     created_by=self.request.user)
 
         self.object = instance  # noqa
         success_url = self.get_success_url()

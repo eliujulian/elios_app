@@ -79,7 +79,7 @@ class WeightDetailViewTest(WeightClassTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("health-weight-detail", kwargs={'pk': 1}))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse("health-weight-detail", kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 405)
 
@@ -99,9 +99,9 @@ class WeightUpdateViewTest(WeightClassTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("health-weight-update", kwargs={'pk': 1}))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse("health-weight-update", kwargs={'pk': 1}))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
 
 class WeightDeleteViewTest(WeightClassTests):
@@ -128,9 +128,9 @@ class WeightDeleteViewTest(WeightClassTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("health-weight-delete", kwargs={'pk': 1}))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse("health-weight-delete", kwargs={'pk': 1}))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
 
 class WeightCreateTest(WeightClassTests):

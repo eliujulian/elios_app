@@ -54,7 +54,7 @@ class GoalDetailTest(GoalTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("goal-detail", args=[self.goal.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse("goal-detail", args=[self.goal.id_slug, ]))
@@ -76,9 +76,9 @@ class GoalUpdateTest(GoalTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("goal-update", args=[self.goal.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse("goal-update", args=[self.goal.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse("goal-update", args=[self.goal.id_slug, ]))
@@ -125,9 +125,9 @@ class GoalDeleteTest(GoalTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse("goal-delete", args=[self.goal.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse("goal-delete", args=[self.goal.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse("goal-delete", args=[self.goal.id_slug, ]))

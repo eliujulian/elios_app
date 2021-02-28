@@ -53,9 +53,9 @@ class ChapterCreateTests(ChapterTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse('chapter-create', args=[self.book.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
         response = self.client.post(reverse('chapter-create', args=[self.book.id_slug, ]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse('chapter-create', args=[self.book.id_slug, ]))
@@ -81,7 +81,7 @@ class ChapterDetailTest(ChapterTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse('chapter-detail', args=[self.book.id_slug, 0]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse('chapter-detail', args=[self.book.id_slug, 0]))
@@ -105,7 +105,7 @@ class ChapterUpdateTest(ChapterTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse('chapter-update', args=[self.book.id_slug, 0]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse('chapter-update', args=[self.book.id_slug, 0]))
@@ -131,7 +131,7 @@ class ChapterDeleteTest(ChapterTests):
         self.client.logout()
         self.client.login(username="bdam", password="123456")
         response = self.client.get(reverse('chapter-delete', args=[self.book.id_slug, 0]))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 404)
 
     def test_get(self):
         response = self.client.get(reverse('chapter-delete', args=[self.book.id_slug, 0]))

@@ -24,8 +24,8 @@
         {{ data }}
 
         <hr>
-        <a href="{% url 'account-detail' user.username %}">Account</a>
-        <a href="{% url 'account-update' user.username %}">Account Update</a>
+        <a href="{% url 'account-detail' %}">Account</a>
+        <a href="{% url 'account-update' %}">Account Update</a>
 
         {% if perms.health.health_app %}
             <hr>

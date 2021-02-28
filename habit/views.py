@@ -1,8 +1,8 @@
+from django.shortcuts import get_object_or_404
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView, \
-    OnlyCreatorAccessMixin
+from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView
 from habit.forms import *
 
 
@@ -16,13 +16,18 @@ class HabitProfileView(PermissionRequiredMixin, CustomDetailView):
     permission_required = perm
 
     def get_object(self, queryset=None):
-        return HabitProfile.objects.get(profile_for=self.request.user)
+        instance = get_object_or_404(HabitProfile, profile_for=self.request.user)
+        return instance
 
 
 class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = HabitProfile
     permission_required = perm
     template_name = "habit/hapitprofile_update.html"
+
+    def get_object(self, queryset=None):
+        instance = get_object_or_404(HabitProfile, profile_for=self.request.user)
+        return instance
 
     def get_form_class(self):
         if self.request.GET.get('field', False):
@@ -43,9 +48,6 @@ class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
         print(context)
         return context
 
-    def get_object(self, queryset=None):
-        return HabitProfile.objects.get(profile_for=self.request.user)
-
 
 class GoalCreateView(PermissionRequiredMixin, CustomCreateView):
     model = Goal
@@ -57,25 +59,34 @@ class GoalCreateView(PermissionRequiredMixin, CustomCreateView):
         return super().form_valid(form)
 
 
-class GoalDetailView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDetailView):
+class GoalDetailView(PermissionRequiredMixin, CustomDetailView):
     model = Goal
     permission_required = perm
     slug_field = 'id_slug'
     http_method_names = ['get']
     template_name = 'habit/goal_detail.html'
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(Goal, created_by=self.request.user, id_slug=self.kwargs['slug'])
 
-class GoalUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
+
+class GoalUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = Goal
     permission_required = perm
     form_class = GoalForm
     slug_field = 'id_slug'
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(Goal, created_by=self.request.user, id_slug=self.kwargs['slug'])
 
-class GoalDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
+
+class GoalDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = Goal
     permission_required = perm
     slug_field = 'id_slug'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Goal, created_by=self.request.user, id_slug=self.kwargs['slug'])
 
     def get_success_url(self):
         return reverse("goals")

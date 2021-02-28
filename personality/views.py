@@ -1,30 +1,26 @@
-from django.shortcuts import reverse
+from django.shortcuts import reverse, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, OnlyCreatorAccessMixin
+from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView
 from personality.forms import *
+
+
+perm = 'core.personality_app'
 
 
 class PersonalityView(PermissionRequiredMixin, CustomDetailView):
     model = PersonalityProfile
     template_name = "personality/personality.html"
-    permission_required = 'core.personality_app'
+    permission_required = perm
 
     def get_object(self, queryset=None):
-        if PersonalityProfile.objects.filter(profile_about=self.request.user).count() == 0:
-            PersonalityProfile.objects.create(
-                **{'created_by': self.request.user,
-                   'profile_about': self.request.user,
-                   'timestamp_created': timezone.now(),
-                   'timestamp_changed': timezone.now()}
-            )
-        return PersonalityProfile.objects.get(profile_about=self.request.user)
+        return PersonalityProfile.objects.get(created_by=self.request.user)
 
 
 class PersonalityUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = PersonalityProfile
     form_class = PersonalityUpdateForm
-    permission_required = 'core.personality_app'
+    permission_required = perm
 
     def get_object(self, queryset=None):
         return PersonalityProfile.objects.get(profile_about=self.request.user)
@@ -33,7 +29,7 @@ class PersonalityUpdateView(PermissionRequiredMixin, CustomUpdateView):
 class PersonalityNoteCreateView(PermissionRequiredMixin, CustomCreateView):
     model = PersonalityNote
     form_class = NoteForm
-    permission_required = 'core.personality_app'
+    permission_required = perm
 
     def form_valid(self, form):
         form.instance.note_about = self.request.user.personalityprofile
@@ -41,17 +37,23 @@ class PersonalityNoteCreateView(PermissionRequiredMixin, CustomCreateView):
         return super().form_valid(form)
 
 
-class PersonalityNoteUpdateView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomUpdateView):
+class PersonalityNoteUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = PersonalityNote
     form_class = NoteForm
     slug_field = "id_slug"
-    permission_required = 'core.personality_app'
+    permission_required = perm
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
 
 
-class PersonalityNoteDeleteView(PermissionRequiredMixin, OnlyCreatorAccessMixin, CustomDeleteView):
+class PersonalityNoteDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = PersonalityNote
     slug_field = "id_slug"
-    permission_required = 'core.personality_app'
+    permission_required = perm
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
 
     def get_success_url(self):
         return reverse("personality")

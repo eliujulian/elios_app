@@ -30,9 +30,9 @@ basic_urls = [
 account_management_urls = [
     path("register/", AccountRegisterView.as_view(), name="account-register"),
     path("account/confirm/", AccountConfirmEMailView.as_view(), name="account-confirm"),
-    path("account/<slug>/", login_required(AccountDetailView.as_view()), name="account-detail"),
-    path("account/<slug>/update/", login_required(AccountUpdateView.as_view()), name="account-update"),
-    path("account/<slug>/delete/", login_required(AccountDeleteView.as_view()), name="account-delete")
+    path("account/", login_required(AccountDetailView.as_view()), name="account-detail"),
+    path("account/update/", login_required(AccountUpdateView.as_view()), name="account-update"),
+    path("account/delete/", login_required(AccountDeleteView.as_view()), name="account-delete")
 ]
 
 admin_urls = [

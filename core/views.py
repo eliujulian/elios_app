@@ -12,6 +12,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from .forms import *
 from elios_app import settings
 from habit.models import HabitProfile
+from personality.models import PersonalityProfile
+
+
+perm = 'core.landingpage_right'
 
 
 class CustomCreateView(CreateView):
@@ -47,25 +51,11 @@ class CustomDeleteView(DeleteView):
     template_name = "generic/generic_confirm_delete.html"
 
 
-class OnlyCreatorAccessMixin:
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object() # noqa
-        if request.user != instance.created_by:
-            return HttpResponse("Unauthorized", status=401)
-        return super().get(request, *args, **kwargs) # noqa
-
-    def post(self, request, *args, **kwargs):
-        instance = self.get_object() # noqa
-        if request.user != instance.created_by:
-            return HttpResponse("Unauthorized", status=401)
-        return super().post(request, *args, **kwargs) # noqa
-
-
 class UserDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
     template_name = "user/user_detail.html"
     slug_field = "username"
-    permission_required = 'core.landingpage_right'
+    permission_required = perm
 
     def get_object(self, queryset=None):
         return get_object_or_404(User, username=self.kwargs['slug'], is_active=True)
@@ -97,6 +87,13 @@ class AccountRegisterView(CreateView):
                'timestamp_created': timezone.now(),
                'timestamp_changed': timezone.now(),
                'profile_for': self.object
+               }
+        )
+        PersonalityProfile.objects.create(
+            **{'created_by': self.object,
+               'timestamp_created': timezone.now(),
+               'timestamp_changed': timezone.now(),
+               'profile_about': self.object
                }
         )
 
@@ -154,8 +151,11 @@ class AccountConfirmEMailView(View):
 
 class AccountDetailView(PermissionRequiredMixin, CustomDetailView):
     model = User
-    slug_field = "username"
     permission_required = 'core.landingpage_right'
+
+    def get_object(self, queryset=None):
+        instance = get_object_or_404(User, username=self.request.user.username)
+        return instance
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -169,7 +169,11 @@ class AccountUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = User
     slug_field = "username"
     form_class = AccountUpdateForm
-    permission_required = 'core.landingpage_right'
+    permission_required = perm
+
+    def get_object(self, queryset=None):
+        instance = get_object_or_404(User, username=self.request.user.username)
+        return instance
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -189,7 +193,11 @@ class AccountUpdateView(PermissionRequiredMixin, CustomUpdateView):
 class AccountDeleteView(PermissionRequiredMixin, CustomDeleteView):
     model = User
     slug_field = "username"
-    permission_required = 'core.landingpage_right'
+    permission_required = perm
+
+    def get_object(self, queryset=None):
+        instance = get_object_or_404(User, username=self.request.user.username)
+        return instance
 
     def get_success_url(self):
         instance = self.get_object()

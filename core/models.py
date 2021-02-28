@@ -39,10 +39,13 @@ class User(AbstractUser):
         return confirm_url
 
     def get_absolute_url(self):
-        return reverse("account-detail", kwargs={"slug": self.username})
+        return reverse("user-detail", kwargs={"slug": self.username})
+
+    def get_update_url(self):
+        return reverse("account-update")
 
     def get_delete_url(self):
-        return reverse("account-delete", kwargs={"slug": self.username})
+        return reverse("account-delete")
 
     def __str__(self):
         if self.first_name and self.last_name:
