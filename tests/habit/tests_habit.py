@@ -13,8 +13,7 @@ class HabitTests(CreateUserMixin):
             'title': 'Ein Habit',
             'id_slug': Habit.get_id_slug(10),
         }
-        h1 = Habit.objects.create(**data)
-        self.habit1 = h1
+        self.habit1 = Habit.objects.create(**data)  #nopa
 
 
 class HabitDetailTest(HabitTests, TestCase):
@@ -30,4 +29,3 @@ class HabitDetailTest(HabitTests, TestCase):
     def test_post(self):
         response = self.client.post(reverse("habit-detail", args=[self.habit1.id_slug, ]))
         self.assertEqual(response.status_code, 405)
-
