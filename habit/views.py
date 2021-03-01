@@ -118,15 +118,26 @@ class HabitDetailView(PermissionRequiredMixin, CustomDetailView):
 class HabitUpdateView(PermissionRequiredMixin, CustomUpdateView):
     model = Habit
     permission_required = perm
+    form_class = HabitForm
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+
+    def get_form_class(self):
+        form = self.form_class
+        form.base_fields['goal'].limit_choices_to = {'created_by': self.request.user, 'sphere': self.object.sphere}
+        return form
 
 
 class HabitCreateView(PermissionRequiredMixin, CustomCreateView):
     model = Habit
     permission_required = perm
     form_class = HabitForm
+
+    def get_form_class(self):
+        form = self.form_class
+        form.base_fields['goal'].limit_choices_to = {'created_by': self.request.user}
+        return form
 
 
 class HabitDeleteView(PermissionRequiredMixin, CustomDeleteView):
