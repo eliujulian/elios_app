@@ -101,6 +101,7 @@ class HabitListView(PermissionRequiredMixin, CustomListView):
     model = Habit
     permission_required = perm
     http_method_names = ['get']
+    template_name = "habit/habit_list.html"
 
     def get_queryset(self):
         return Habit.objects.filter(created_by=self.request.user)
@@ -110,6 +111,7 @@ class HabitDetailView(PermissionRequiredMixin, CustomDetailView):
     model = Habit
     permission_required = perm
     http_method_names = ['get']
+    template_name = "habit/habit_detail.html"
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])

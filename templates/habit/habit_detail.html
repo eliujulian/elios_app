@@ -1,0 +1,43 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-header">
+                {{ object.title }}
+            </div>
+
+            <div class="card-body">
+                {{ object.description|linebreaks }}
+
+                {{ object.get_interval_display }}
+
+                {% if object.interval == 1 %}
+                    {% if object.skip_weekend %}
+                        Mo. bis Fr.
+                    {% elif object.skip_weekdays %}
+                        Sa. und So.
+                    {% endif %}
+                {% elif object.interval == 2 %}
+                    {{ object.get_day_of_week_display }}
+                {% else %}
+                    {{ object.get_day_of_month_display }}
+                {% endif %}
+            </div>
+
+            <div class="card-footer">
+                <a href="{% url 'habits' %}">
+                    <button class="btn btn-primary">Übersicht</button>
+                </a>
+                <a href="{% url 'habit-update' object.id_slug %}">
+                    <button class="btn btn-primary">Bearbeiten</button>
+                </a>
+                <a href="{% url 'habit-delete' object.id_slug %}">
+                    <button class="btn btn-danger">Löschen</button>
+                </a>
+            </div>
+        </div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    {% for object in object_list %}
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            </div>
+            <div class="card-body">
+                {{ object.get_sphere_display }} | {{ object.get_interval_display }}
+
+                {% if object.interval == 1 %}
+                    {% if object.skip_weekend %}
+                        Mo. bis Fr.
+                    {% elif object.skip_weekdays %}
+                        Sa. und So.
+                    {% endif %}
+                {% elif object.interval == 2 %}
+                    {{ object.get_day_of_week_display }}
+                {% else %}
+                    {{ object.get_day_of_month_display }}
+                {% endif %}
+
+            </div>
+        </div>
+
+    {% endfor %}
+
+
+    <a href="{% url 'habit-create' %}">
+        <button class="btn btn-primary mt-3">
+            Neue Gewohnheit
+        </button>
+    </a>
+
+{% endblock %}

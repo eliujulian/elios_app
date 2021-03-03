@@ -78,6 +78,9 @@ class Goal(AbstractBaseModel):
 
 
 class Habit(AbstractBaseModel):
+    class Meta:
+        ordering = ['sphere', 'title']
+
     INTERVAL = (
         (1, 'täglich'),
         (2, 'wöchentlich'),
@@ -197,7 +200,7 @@ class Habit(AbstractBaseModel):
         self.save()
 
     def __str__(self):
-        return self.title
+        return f"{self.title} ({self.get_sphere_display()})"
 
 
 class HabitEvent(AbstractBaseModel):
