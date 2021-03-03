@@ -22,7 +22,12 @@
     {% block content %}
         <div class="card">
         {{ data }}
+        <hr>
+        <h3>Habit Checklist</h3>
 
+        {% for habit in user.habitprofile.get_habits_today %}
+            {{ habit }}<br>
+        {% endfor %}
         <hr>
         <a href="{% url 'account-detail' %}">Account</a>
         <a href="{% url 'account-update' %}">Account Update</a>
@@ -55,6 +60,7 @@
             <a href="{% url 'chapter-random' %}">Zufälliges Kapitel</a>
         {% endif %}
 
+        <!--
         <hr>
         <div class="text-center">
             <video width="320" autoplay loop muted>
@@ -62,6 +68,7 @@
                     Your browser does not support the video tag.
             </video>
         </div>
+        -->
 
         </div>
     {% endblock content %}

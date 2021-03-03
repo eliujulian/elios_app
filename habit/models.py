@@ -33,6 +33,29 @@ class HabitProfile(AbstractBaseModel):
     def get_absolute_url(self):
         return reverse("habitprofile")
 
+    def get_all_habits(self):
+        return Habit.objects.filter(created_by_id=self.created_by_id, is_active=True)
+
+    def get_habits(self, date: datetime.date):
+        habits = Habit.objects.filter(created_by_id=self.created_by_id, is_active=True)
+        daily_habits = habits.filter(interval=1)
+        if date.isoweekday() >= 6:
+            daily_habits = daily_habits.filter(skip_weekend=False)
+        else:
+            daily_habits = daily_habits.filter(skip_weekdays=False)
+
+        weekly_habits = habits.filter(interval=2, day_of_week=date.isoweekday())
+        monthly_habits = habits.filter(interval=3)
+        if 1 <= date.day <= 3 or date.day == 15:
+            monthly_habits = monthly_habits.filter(day_of_month=date.day)
+            return daily_habits | weekly_habits | monthly_habits
+
+
+        return daily_habits | weekly_habits
+
+    def get_habits_today(self):
+        return self.get_habits(datetime.date.today())
+
     def __str__(self):
         return f"HabitProfile for {self.profile_for}"
 
@@ -51,7 +74,7 @@ class Goal(AbstractBaseModel):
         return reverse("goal-create")
 
     def __str__(self):
-        return self.title
+        return f"{self.title} ({self.get_sphere_display()})"
 
 
 class Habit(AbstractBaseModel):
