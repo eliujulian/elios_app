@@ -92,6 +92,7 @@ class GoalListView(PermissionRequiredMixin, CustomListView):
     model = Goal
     permission_required = perm
     http_method_names = ['get']
+    template_name = "habit/goal_list.html"
 
     def get_queryset(self):
         return Goal.objects.filter(created_by=self.request.user)

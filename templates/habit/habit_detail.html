@@ -25,6 +25,23 @@
                 {% else %}
                     {{ object.get_day_of_month_display }}
                 {% endif %}
+
+                <div>Reihe: {{ object.current_streak }}</div>
+                <div>Gesamt: {{ object.total_done }}</div>
+                <div>Längste Reihe: {{ object.highest_streak }}</div>
+
+            <div>
+
+            </div>
+                <button class="btn btn-secondary">
+                    Done 2day
+                </button>
+                <button class="btn btn-secondary">
+                    Skip 2day
+                </button>
+                <button class="btn btn-secondary">
+                    Fail 2day
+                </button>
             </div>
 
             <div class="card-footer">
