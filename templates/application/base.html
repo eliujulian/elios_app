@@ -5,7 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <title>eliOS App elevate</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <!--
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <script src="https://kit.fontawesome.com/60a7f83830.js" crossorigin="anonymous"></script>
 </head>
@@ -57,16 +60,6 @@
             <a href="{% url 'book-random' %}">Zufälliges Buch</a>
             <a href="{% url 'chapter-random' %}">Zufälliges Kapitel</a>
         {% endif %}
-
-        <!--
-        <hr>
-        <div class="text-center">
-            <video width="320" autoplay loop muted>
-                <source src="{% static 'aRP1Gr7_460sv.mp4' %}" type="video/mp4">
-                    Your browser does not support the video tag.
-            </video>
-        </div>
-        -->
 
         </div>
     {% endblock content %}
