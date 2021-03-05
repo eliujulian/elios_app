@@ -30,6 +30,18 @@ class HabitProfile(AbstractBaseModel):
         'vision_8': 'Persönlichkeit'
     }
 
+    def get_visions(self):
+        return [
+            (1, self.LABELS['vision_1'], self.vision_1),
+            (2, self.LABELS['vision_2'], self.vision_2),
+            (3, self.LABELS['vision_3'], self.vision_3),
+            (4, self.LABELS['vision_4'], self.vision_4),
+            (5, self.LABELS['vision_5'], self.vision_5),
+            (6, self.LABELS['vision_6'], self.vision_6),
+            (7, self.LABELS['vision_7'], self.vision_7),
+            (8, self.LABELS['vision_8'], self.vision_8)
+        ]
+
     def get_absolute_url(self):
         return reverse("habitprofile")
 
@@ -49,7 +61,6 @@ class HabitProfile(AbstractBaseModel):
         if 1 <= date.day <= 3 or date.day == 15:
             monthly_habits = monthly_habits.filter(day_of_month=date.day)
             return daily_habits | weekly_habits | monthly_habits
-
 
         return daily_habits | weekly_habits
 
@@ -74,7 +85,7 @@ class Goal(AbstractBaseModel):
         return reverse("goal-create")
 
     def __str__(self):
-        return f"{self.title} ({self.get_sphere_display()})"
+        return f"{self.title}"
 
 
 class Habit(AbstractBaseModel):

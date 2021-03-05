@@ -7,8 +7,10 @@
     {% for object in object_list %}
 
         <div class="card mt-3">
-            <div class="card-header">
-                <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            <div class="card-header color-{{ object.sphere }}">
+                <h5>
+                    <a style="color: black; text-decoration: None" href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+                </h5>
             </div>
             <div class="card-body">
                 {{ object.get_sphere_display }} | {{ object.get_interval_display }}
