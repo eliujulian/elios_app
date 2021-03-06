@@ -25,51 +25,94 @@
 <div class="container">
 
     {% block content %}
-        <div class="card">
+        <div class="card m-1">
         {{ data }}
         <hr>
         <h3>Habit Checklist</h3>
 
         {% for habit in user.habitprofile.get_habits_today %}
-            {{ habit }}<br>
+            <div class="card m-1">
+                <div class="row g-0">
+                    <div class="col-md-3 color-{{ habit.sphere }}">
+                         {{ habit.title }}
+                    </div>
+                    <div class="col-md-1">
+                        Reihe: {{ habit.current_streak }}
+                    </div>
+
+                    <div class="col-md-2">
+                        Aktionen heute
+                    </div>
+
+                    <div class="col-md-2">
+                        Aktionen gestern
+                    </div>
+
+                    <div class="col-md-3">
+                        Lorem ipsum
+                    </div>
+
+                </div>
+            </div>
         {% endfor %}
 
-        <hr>
-        <strong>Navigation</strong>
-        <div class="row">
+
+            <hr>
+            <div class="row">
             <div class="col-2">
+                <strong>Einstellungen</strong><br>
+                <hr>
                 <a href="{% url 'account-detail' %}">Account</a><br>
-                <a href="{% url 'account-update' %}">Account Update</a>
             </div>
-            <div class="col-2">
-                {% if perms.health.health_app %}
-                    <a href="{% url 'health-weight' %}">Gewicht Liste</a><br>
+            {% if perms.health.health_app %}
+                <div class="col-2">
+                    <strong>Gesundheit</strong><br>
+                    <hr>
+                    <a href="{% url 'health-weight' %}">Gewicht</a><br>
+                    <hr>
                     <a href="{% url 'health-weight-create' %}">Gewicht erfassen</a>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
 
-            <div class="col-2">
-                {% if perms.personality.personality_app %}
+            {% if perms.personality.personality_app %}
+                <div class="col-2">
+                    <strong>Selbsterkenntnis</strong><br>
+                    <hr>
                     <a href="{% url 'personality' %}">Persönlichkeitsprofil</a>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
 
-            <div class="col-2">
-                {% if perms.habit.habit_app %}
+            {% if perms.habit.habit_app %}
+                <div class="col-2">
+                    <strong>Gewohnheiten</strong><br>
+                    <hr>
                     <a href="{% url 'habitprofile' %}">Visionen</a><br>
                     <a href="{% url 'goals' %}">Ziele</a><br>
-                    <a href="{% url 'habits' %}">Gewohnheiten</a>
-                {% endif %}
-            </div>
+                    <a href="{% url 'habits' %}">Gewohnheiten</a><br>
+                    <hr>
+                    <a href="{% url 'sphere' 1 %}">Arbeit</a><br>
+                    <a href="{% url 'sphere' 2 %}">Finanzen</a><br>
+                    <a href="{% url 'sphere' 3 %}">Gesundheit</a><br>
+                    <a href="{% url 'sphere' 4 %}">Freizeit</a><br>
+                    <a href="{% url 'sphere' 5 %}">Beziehung</a><br>
+                    <a href="{% url 'sphere' 6 %}">Familie</a><br>
+                    <a href="{% url 'sphere' 7 %}">Geselligkeit</a><br>
+                    <a href="{% url 'sphere' 8 %}">Persönlichkeit</a><br>
+                    <hr>
+                </div>
+            {% endif %}
 
-            <div class="col-2">
-                {% if perms.knowledge.knowledge_app %}
-                    <a href="{% url 'book-create' %}">Neues Buch</a><br>
-                    <a href="{% url 'books' %}">Alle Bücher</a><br>
+            {% if perms.knowledge.knowledge_app %}
+                <div class="col-2">
+                    <strong>Wissen</strong><br>
+                    <hr>
+                    <a href="{% url 'books' %}">Bücher</a><br>
+                    <hr>
                     <a href="{% url 'book-random' %}">Zufälliges Buch</a><br>
                     <a href="{% url 'chapter-random' %}">Zufälliges Kapitel</a>
-                {% endif %}
-            </div>
+                    <hr>
+                </div>
+            {% endif %}
 
         </div>
 
