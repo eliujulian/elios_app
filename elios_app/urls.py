@@ -97,8 +97,7 @@ knowledge_urls = [
     path("knowledge/random-chapter/", login_required(RandomChapterRedirect.as_view()), name="chapter-random"),
 ]
 
-urlpatterns = list()
-urlpatterns.extend(basic_urls)
+urlpatterns = basic_urls
 urlpatterns.extend(account_management_urls)
 urlpatterns.extend(admin_urls)
 urlpatterns.extend(health_urls)
