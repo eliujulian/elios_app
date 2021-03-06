@@ -42,9 +42,6 @@ admin_urls = [
 health_urls = [
     path("health/weight/", login_required(WeightView.as_view()), name="weight"),
     path("health/weight/create/", login_required(WeightCreateView.as_view()), name="weight-create"),
-    path("health/weight/<int:pk>/", login_required(WeightDetailView.as_view()), name="weight-detail"),
-    path("health/weight/<int:pk>/update/", login_required(WeightUpdateView.as_view()), name="weight-update"),
-    path("health/weight/<int:pk>/delete/", login_required(WeightDeleteView.as_view()), name="weight-delete"),
 ]
 
 personality_urls = [

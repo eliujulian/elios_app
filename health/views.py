@@ -26,34 +26,3 @@ class WeightView(PermissionRequiredMixin, CustomDetailView):
     def get_object(self, queryset=None):
         instance = Weight.objects.filter(created_by=self.request.user).first()
         return instance
-
-
-class WeightDetailView(PermissionRequiredMixin, CustomDetailView):
-    model = Weight
-    permission_required = 'core.health_app'
-    http_method_names = ['get']
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Weight, created_by=self.request.user, id=self.kwargs['pk'])
-
-
-class WeightUpdateView(PermissionRequiredMixin, CustomUpdateView):
-    model = Weight
-    form_class = WeightForm
-    permission_required = 'core.health_app'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Weight, created_by=self.request.user, id=self.kwargs['pk'])
-
-
-class WeightDeleteView(PermissionRequiredMixin, CustomDeleteView):
-    model = Weight
-    permission_required = 'core.health_app'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Weight, created_by=self.request.user, id=self.kwargs['pk'])
-
-    def get_success_url(self):
-        instance = self.object
-        message = f"{instance} was deleted."
-        return reverse("message-success-public") + f"?message={message}"

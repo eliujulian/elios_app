@@ -81,10 +81,10 @@ class Weight(AbstractBaseModel):
             return round(sum([n.weight for n in data]) / data.count(), 1)
 
     def get_absolute_url(self):
-        return reverse("weight-detail", kwargs={"pk": self.id})
+        return reverse("weight")
 
     def get_update_url(self):
-        return reverse("weight-update", kwargs={"pk": self.id})
+        return None
 
     def get_create_url(self):
         return reverse("weight-create")
