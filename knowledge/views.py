@@ -18,6 +18,7 @@ class BookCreateView(PermissionRequiredMixin, CustomCreateView):
 class BookListView(PermissionRequiredMixin, CustomListView):
     model = Book
     permission_required = perm
+    template_name = "knowledge/book_list.html"
 
     def get_queryset(self):
         return Book.objects.filter(created_by=self.request.user)

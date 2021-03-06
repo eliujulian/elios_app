@@ -1,0 +1,21 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    {% for object in object_list %}
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+            </div>
+        </div>
+
+    {% endfor %}
+
+    <a href="{% url 'book-create' %}">
+        <button class="btn btn-primary mt-3">Neues Buch</button>
+    </a>
+
+{% endblock %}
