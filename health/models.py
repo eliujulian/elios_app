@@ -21,11 +21,13 @@ class Weight(AbstractBaseModel):
         return " " * (5 - len(str(self.weight))) + str(self.weight)
 
     def current_weight(self):
-        return Weight.objects.filter(created_by=self.created_by)[0].weight
+        return Weight.objects.filter(created_by=self.created_by).first().weight
 
     def last_measure(self):
-        instance = Weight.objects.filter(created_by=self.created_by)[0]
-        return instance.measurement_date
+        return Weight.objects.filter(created_by=self.created_by).first().measurement_date
+
+    def fist_measure(self):
+        return Weight.objects.filter(created_by=self.created_by).order_by('measurement_date').first().measurement_date
 
     def max_weight(self):
         values = [n.weight for n in Weight.objects.filter(created_by=self.created_by)]
@@ -36,10 +38,10 @@ class Weight(AbstractBaseModel):
 
     def max_weight_one_year(self):
         values = [n.weight for n in Weight.objects.filter(created_by=self.created_by,
-                                                            measurement_date__gt=datetime.date(timezone.now().year - 1,
-                                                                                               timezone.now().month,
-                                                                                               timezone.now().day)
-                                                            )]
+                                                          measurement_date__gt=datetime.date(timezone.now().year - 1,
+                                                                                             timezone.now().month,
+                                                                                             timezone.now().day)
+                                                          )]
         if len(values) == 0:
             return None
         else:
@@ -54,10 +56,10 @@ class Weight(AbstractBaseModel):
 
     def min_weight_one_year(self):
         values = [n.weight for n in Weight.objects.filter(created_by=self.created_by,
-                                                            measurement_date__gt=datetime.date(timezone.now().year - 1,
-                                                                                               timezone.now().month,
-                                                                                               timezone.now().day)
-                                                            )]
+                                                          measurement_date__gt=datetime.date(timezone.now().year - 1,
+                                                                                             timezone.now().month,
+                                                                                             timezone.now().day)
+                                                          )]
         if len(values) == 0:
             return None
         else:

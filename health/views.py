@@ -20,7 +20,7 @@ class WeightCreateView(PermissionRequiredMixin, CustomCreateView):
 class WeightView(PermissionRequiredMixin, CustomDetailView):
     model = Weight
     permission_required = 'core.health_app'
-    template_name = "health/weight.html"
+    template_name = "health/health.html"
     http_method_names = ['get']
 
     def get_object(self, queryset=None):
