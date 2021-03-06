@@ -1,0 +1,24 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Gesundheit</h3>
+            </div>
+            <div class="card-body">
+                Gewicht: {{ object.current_weight }}  ({{ object.measurement_date_str }})<br>
+                Durchschnitt der letzten 12 Monate: {{ object.average_weight_one_year }} <br>
+                (Max.: {{ object.max_weight_one_year }} Min.: {{ object.min_weight_one_year }}) <br>
+
+
+            <a href="{% url 'weight-create' %}">
+                <button class="btn btn-outline-primary mt-3">Gewicht erfassen</button>
+            </a>
+
+            </div>
+        </div>
+
+{% endblock %}

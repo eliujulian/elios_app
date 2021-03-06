@@ -17,12 +17,15 @@ class WeightCreateView(PermissionRequiredMixin, CustomCreateView):
         return initials
 
 
-class WeightListView(PermissionRequiredMixin, CustomListView):
+class WeightView(PermissionRequiredMixin, CustomDetailView):
     model = Weight
     permission_required = 'core.health_app'
+    template_name = "health/weight.html"
+    http_method_names = ['get']
 
-    def get_queryset(self):
-        return Weight.objects.filter(created_by=self.request.user)
+    def get_object(self, queryset=None):
+        instance = Weight.objects.filter(created_by=self.request.user).first()
+        return instance
 
 
 class WeightDetailView(PermissionRequiredMixin, CustomDetailView):

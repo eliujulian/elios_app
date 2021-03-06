@@ -12,7 +12,9 @@
             </div>
             <div class="card-body">
                 {{ object.description|linebreaks }}
-                <a href="{{ object.get_absolute_url }}">Details</a>
+                <a href="{{ object.get_absolute_url }}">Details</a> -
+                <a href="{{ object.get_update_url }}">Bearbeiten</a> -
+                <a href="{% url 'sphere' object.sphere %}">Sphere</a>
             </div>
         </div>
 

@@ -72,6 +72,8 @@ class HabitProfile(AbstractBaseModel):
 
 
 class Goal(AbstractBaseModel):
+    class Meta:
+        ordering = ['sphere', 'title']
     id_slug = models.CharField(max_length=18, unique=True, editable=False)
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True, null=True)
