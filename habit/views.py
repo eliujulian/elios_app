@@ -2,7 +2,9 @@ from django.shortcuts import get_object_or_404
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView
+from django.http import Http404
+from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView, \
+    TemplateView
 from habit.forms import *
 
 
@@ -46,6 +48,26 @@ class HabitProfileUpdateView(PermissionRequiredMixin, CustomUpdateView):
             print(field)
             context['get_parameter'] = f"field={field}"
         print(context)
+        return context
+
+
+class SphereView(PermissionRequiredMixin, TemplateView):
+    permission_required = perm
+    template_name = "habit/sphere.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        user_id = self.request.user.id
+        sphere = self.kwargs['sphere']
+        if sphere > 8 or sphere < 1:
+            raise Http404("Sphere must be between 1 - 8")
+        habitprofile = HabitProfile.objects.get(profile_for_id=user_id)
+        visions = habitprofile.get_visions()[sphere-1]
+        context['sphere_id'] = visions[0]
+        context['sphere'] = visions[1]
+        context['vision'] = visions[2]
+        context['goals'] = Goal.objects.filter(created_by_id=user_id, sphere=sphere)
+        context['habits'] = Habit.objects.filter(created_by_id=user_id, sphere=sphere)
         return context
 
 
@@ -113,6 +135,15 @@ class HabitDetailView(PermissionRequiredMixin, CustomDetailView):
     permission_required = perm
     http_method_names = ['get']
     template_name = "habit/habit_detail.html"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+
+
+class HabitEventView(PermissionRequiredMixin, CustomDetailView):
+    model = Habit
+    permission_required = perm
+    http_method_names = ['post']
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])

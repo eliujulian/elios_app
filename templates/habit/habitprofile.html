@@ -15,6 +15,7 @@
                     <div class="card-body">
                         {{ vision.2|linebreaks }}
                         <a href="{% url 'habitprofile-update' %}?field=vision_{{ vision.0 }}">Bearbeiten</a>
+                        <a href="{% url 'sphere' vision.0 %}">Sphere</a>
                     </div>
                 </div>
                 {% endfor %}

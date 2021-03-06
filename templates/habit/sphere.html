@@ -1,0 +1,52 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <div class="card">
+            <div class="card-header color-{{ sphere_id }}">
+                <h3>{{ sphere }}</h3>
+            </div>
+            <div class="card-body">
+
+                <h4>Vision</h4>
+                {{ vision|linebreaks }}
+
+                <a href="{% url 'habitprofile-update' %}?field=vision_{{ sphere_id }}">
+                    <button class="btn btn-outline-primary">
+                        Bearbeiten
+                    </button>
+                </a>
+
+                <h4>Ziele</h4>
+                {% for goal in goals %}
+                    <p>
+                        <a href="{% url 'goal-detail' goal.id_slug %}">{{ goal }}</a>
+                    </p>
+                {% endfor %}
+
+                <a href="{% url 'goal-create' %}">
+                    <button class="btn btn-outline-primary">
+                        Neues Ziel
+                    </button>
+                </a>
+
+                <h4>Gewohnheiten</h4>
+                    {% for habit in habits %}
+                        <p>
+                            <a href="{% url 'habit-detail' habit.id_slug %}">{{ habit }}</a>
+                        </p>
+                    {% endfor %}
+
+                <a href="{% url 'habit-create' %}">
+                    <button class="btn btn-outline-primary">
+                        Neue Gewohnheit
+                    </button>
+                </a>
+
+
+            </div>
+        </div>
+
+{% endblock %}
