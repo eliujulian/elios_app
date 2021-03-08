@@ -13,6 +13,7 @@
     -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <script src="https://kit.fontawesome.com/60a7f83830.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/eliosapp.js' %}"></script>
 </head>
 <body>
 
@@ -31,17 +32,51 @@
         <h3>Habit Checklist</h3>
 
         {% for habit in user.habitprofile.get_habits_today %}
-            <div class="card m-1">
+            <div class="card m-1" id="{{ habit.id_slug }}">
                 <div class="row g-0">
                     <div class="col-md-3 color-{{ habit.sphere }}">
-                         {{ habit.title }}
+                        <a href="{% url 'habit-detail' habit.id_slug %}">
+                            {{ habit.title }}
+                        </a>
                     </div>
                     <div class="col-md-1">
                         Reihe: {{ habit.current_streak }}
                     </div>
 
                     <div class="col-md-2">
-                        Aktionen heute
+                        <button
+                                class="btn btn-outline-primary btn-sm"
+                                onclick="post_call(
+                                    '{% url 'habit-event' habit.id_slug %}',
+                                        {action: 'done', date: '{% now "Y-m-d" %}'},
+                                        update_habit
+                                        )"
+                                {% if not habit.open_today %} disabled {% endif %}
+                        >
+                            done
+                        </button>
+                        <button
+                            class="btn btn-sm btn-outline-primary"
+                            {% if not habit.open_today %} disabled {% endif %}
+                            onclick="post_call(
+                                '{% url 'habit-event' habit.id_slug %}',
+                                {action: 'fail', date: '{% now "Y-m-d" %}'},
+                                update_habit
+                            )"
+                        >
+                           fail
+                        </button>
+                        <button
+                            class="btn btn-sm btn-outline-primary"
+                            {% if not habit.open_today %} disabled {% endif %}
+                            onclick="post_call(
+                                '{% url 'habit-event' habit.id_slug %}',
+                                {action: 'cancel', date: '{% now "Y-m-d" %}'},
+                                update_habit
+                            )"
+                        >
+                           skip
+                        </button>
                     </div>
 
                     <div class="col-md-2">
@@ -49,14 +84,71 @@
                     </div>
 
                     <div class="col-md-3">
-                        Lorem ipsum
+                        {% if habit.link %}<a href="{{ habit.link }}">link</a>{% endif %}
                     </div>
 
                 </div>
             </div>
         {% endfor %}
 
+        <h3>Habit Checklist - Open from Yesterday</h3>
 
+        {% for habit in user.habitprofile.get_habits_yesterday %}
+            <div class="card m-1" id="{{ habit.id_slug }}">
+                <div class="row g-0">
+                    <div class="col-md-3 color-{{ habit.sphere }}">
+                        <a href="{% url 'habit-detail' habit.id_slug %}">
+                            {{ habit.title }}
+                        </a>
+                    </div>
+                    <div class="col-md-1">
+                        Reihe: {{ habit.current_streak }}
+                    </div>
+
+                    <div class="col-md-2">
+                        <button
+                                class="btn btn-outline-primary btn-sm"
+                                onclick="post_call(
+                                    '{% url 'habit-event' habit.id_slug %}',
+                                        {action: 'done', date: '{{ yesterday|date:"Y-m-d" }}'},
+                                        update_habit
+                                        )"
+                        >
+                            done
+                        </button>
+                        <button
+                            class="btn btn-sm btn-outline-primary"
+                            onclick="post_call(
+                                '{% url 'habit-event' habit.id_slug %}',
+                                {action: 'fail', date: '{{ yesterday|date:"Y-m-d" }}'},
+                                update_habit
+                            )"
+                        >
+                           fail
+                        </button>
+                        <button
+                            class="btn btn-sm btn-outline-primary"
+                            onclick="post_call(
+                                '{% url 'habit-event' habit.id_slug %}',
+                                {action: 'cancel', date: '{{ yesterday|date:"Y-m-d" }}'},
+                                update_habit
+                            )"
+                        >
+                           skip
+                        </button>
+                    </div>
+
+                    <div class="col-md-2">
+                        Aktionen gestern
+                    </div>
+
+                    <div class="col-md-3">
+                        {% if habit.link %}<a href="{{ habit.link }}">link</a>{% endif %}
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
             <hr>
             <div class="row">
             <div class="col-2">
@@ -119,6 +211,8 @@
         </div>
     {% endblock content %}
 
+
+{% csrf_token %}
 </div>
 
 </body>
