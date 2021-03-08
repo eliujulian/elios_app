@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import Http404
+from django.contrib.auth.decorators import permission_required
+from django.http import Http404, JsonResponse
 from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView, \
     TemplateView
 from habit.forms import *
@@ -140,13 +141,40 @@ class HabitDetailView(PermissionRequiredMixin, CustomDetailView):
         return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
 
 
-class HabitEventView(PermissionRequiredMixin, CustomDetailView):
-    model = Habit
-    permission_required = perm
-    http_method_names = ['post']
+@permission_required(perm)
+def habit_event_view(request, slug):
+    if request.method != "POST":
+        return JsonResponse(data={'message': 'method not allowed'})
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])
+    user = request.user
+    instance = get_object_or_404(Habit, id_slug=slug)
+
+    data = {k: v for k, v in request.POST.items()}
+
+    if instance.created_by != user:
+        return JsonResponse(data={'message': 'missing permission'})
+
+    if not data.get("date"):
+        return JsonResponse(data={'message': 'no date provided'})
+    else:
+        date = datetime.datetime.strptime(data.get("date"), "%Y-%m-%d").date()
+
+    action = data.get("action")
+
+    if not action:
+        return JsonResponse(data={'message': 'please specify action'})
+
+    if action not in ['done', 'fail', 'cancel']:
+        return JsonResponse(data={'message': 'action not allowed'})
+
+    if action == "done":
+        instance.mark_as_done(date)
+    elif action == "fail":
+        instance.mark_as_failed(date)
+    elif action == "cancel":
+        instance.mark_as_canceled(date)
+
+    return JsonResponse(data=instance.serialize())
 
 
 class HabitUpdateView(PermissionRequiredMixin, CustomUpdateView):
