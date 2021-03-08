@@ -1,3 +1,5 @@
+import datetime
+from django.utils import timezone
 from django.template.response import TemplateResponse
 from django.http import HttpResponseNotAllowed
 from django.contrib.auth.decorators import permission_required
@@ -49,6 +51,7 @@ def test_view(request):
     context = dict()
     context['user'] = request.user
     context['data'] = f"You are logged in as {request.user} ({request.user.username})."
+    context['yesterday'] = timezone.now().date() - datetime.timedelta(days=1)
 
     if request.method != "GET":
         return HttpResponseNotAllowed("get")
