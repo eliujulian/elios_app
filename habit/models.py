@@ -67,6 +67,13 @@ class HabitProfile(AbstractBaseModel):
     def get_habits_today(self):
         return self.get_habits(datetime.date.today())
 
+    def get_habits_yesterday(self):
+        today = datetime.date.today()
+        yesterday = today - datetime.timedelta(days=1)
+        habits = self.get_habits(yesterday)
+        habits = habits.filter(last_day__lt=yesterday)
+        return habits
+
     def __str__(self):
         return f"HabitProfile for {self.profile_for}"
 
@@ -159,6 +166,38 @@ class Habit(AbstractBaseModel):
 
     # Privacy - Sharing with other users
     privacy = models.IntegerField(choices=PRIVACY_OPTIONS, default=PRIVACY_OPTIONS[0][0])
+
+    def serialize(self):
+        return {
+            'id_slug': self.id_slug,
+            'title': self.title,
+            'description': self.description,
+            'sphere': self.sphere,
+            'is_active': self.is_active,
+            'is_good_habit': self.is_good_habit,
+            'link': self.link,
+            'current_streak': self.current_streak,
+            'last_day': self.last_day,
+            'last_day_action': self.last_day_action,
+        }
+
+    def open_today(self):
+        today = timezone.now().date()
+        if self.last_day < today:
+            if self.open_yesterday():
+                return False
+            else:
+                return True
+        else:
+            return False
+
+    def open_yesterday(self):
+        today = timezone.now().date()
+        yesterday = today - datetime.timedelta(days=1)
+        if self.last_day < yesterday:
+            return True
+        else:
+            return False
 
     def get_create_url(self):
         return reverse("habit-create")
