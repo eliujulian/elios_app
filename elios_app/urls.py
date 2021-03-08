@@ -65,14 +65,12 @@ habit_urls = [
     path("habits/", login_required(HabitListView.as_view()), name="habits"),
     path("habit/create/", login_required(HabitCreateView.as_view()), name="habit-create"),
     path("habit/<slug>/", login_required(HabitDetailView.as_view()), name="habit-detail"),
-    path("habit/<slug>/event/done/<int:year>-<int:month>-<int:day>/", login_required(HabitEventView.as_view()),
-         name="habit-done"),
-    path("habit/<slug>/event/skip/<int:year>-<int:month>-<int:day>/", login_required(HabitEventView.as_view()),
-         name="habit-skip"),
-    path("habit/<slug>/event/canc/<int:year>-<int:month>-<int:day>/", login_required(HabitEventView.as_view()),
-         name="habit-cancel"),
     path("habit/<slug>/update/", login_required(HabitUpdateView.as_view()), name="habit-update"),
     path("habit/<slug>/delete/", login_required(HabitDeleteView.as_view()), name="habit-delete"),
+]
+
+habit_api_urls = [
+    path("api/habit/<slug>/event/", login_required(habit_event_view), name="habit-event"),
 ]
 
 knowledge_urls = [
@@ -103,4 +101,5 @@ urlpatterns.extend(admin_urls)
 urlpatterns.extend(health_urls)
 urlpatterns.extend(personality_urls)
 urlpatterns.extend(habit_urls)
+urlpatterns.extend(habit_api_urls)
 urlpatterns.extend(knowledge_urls)
