@@ -31,6 +31,9 @@
         <hr>
         <h3>Habit Checklist</h3>
 
+        {% if user.habitprofile.yesterday_open_items %}
+            offene Checkliste von gestern vorhanden - bitte bearbeiten.
+        {% else %}
         {% for habit in user.habitprofile.get_habits_today %}
             <div class="card m-1" id="{{ habit.id_slug }}">
                 <div class="row g-0">
@@ -90,7 +93,9 @@
                 </div>
             </div>
         {% endfor %}
+        {% endif %}
 
+        {% if user.habitprofile.yesterday_open_items %}
         <h3>Habit Checklist - Open from Yesterday</h3>
 
         {% for habit in user.habitprofile.get_habits_yesterday %}
@@ -149,6 +154,9 @@
                 </div>
             </div>
         {% endfor %}
+
+        {% endif %}
+
             <hr>
             <div class="row">
             <div class="col-2">

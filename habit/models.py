@@ -74,6 +74,9 @@ class HabitProfile(AbstractBaseModel):
         habits = habits.filter(last_day__lt=yesterday)
         return habits
 
+    def yesterday_open_items(self):
+        return bool(self.get_habits_yesterday().count())
+
     def __str__(self):
         return f"HabitProfile for {self.profile_for}"
 
