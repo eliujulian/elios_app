@@ -170,6 +170,12 @@ class Habit(AbstractBaseModel):
     # Privacy - Sharing with other users
     privacy = models.IntegerField(choices=PRIVACY_OPTIONS, default=PRIVACY_OPTIONS[0][0])
 
+    def get_direction(self):
+        if self.is_good_habit:
+            return "gute Gewohnheit"
+        else:
+            return "schlechte Gewohnheit"
+
     def serialize(self):
         return {
             'id_slug': self.id_slug,
