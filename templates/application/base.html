@@ -34,11 +34,12 @@
         {% if user.habitprofile.yesterday_open_items %}
             offene Checkliste von gestern vorhanden - bitte bearbeiten.
         {% else %}
+
         {% for habit in user.habitprofile.get_habits_today %}
             <div class="card m-1" id="{{ habit.id_slug }}">
                 <div class="row g-0">
                     <div class="col-md-3 color-{{ habit.sphere }}">
-                        <a href="{% url 'habit-detail' habit.id_slug %}">
+                        <a style="color: black; text-decoration: None" href="{% url 'habit-detail' habit.id_slug %}">
                             {{ habit.title }}
                         </a>
                     </div>
@@ -82,10 +83,6 @@
                         </button>
                     </div>
 
-                    <div class="col-md-2">
-                        Aktionen gestern
-                    </div>
-
                     <div class="col-md-3">
                         {% if habit.link %}<a href="{{ habit.link }}">link</a>{% endif %}
                     </div>
@@ -93,10 +90,12 @@
                 </div>
             </div>
         {% endfor %}
+
         {% endif %}
 
         {% if user.habitprofile.yesterday_open_items %}
-        <h3>Habit Checklist - Open from Yesterday</h3>
+
+            <h3>Habit Checklist - Open from Yesterday</h3>
 
         {% for habit in user.habitprofile.get_habits_yesterday %}
             <div class="card m-1" id="{{ habit.id_slug }}">
@@ -141,10 +140,6 @@
                         >
                            skip
                         </button>
-                    </div>
-
-                    <div class="col-md-2">
-                        Aktionen gestern
                     </div>
 
                     <div class="col-md-3">

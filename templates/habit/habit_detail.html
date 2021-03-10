@@ -26,10 +26,26 @@
                     {{ object.get_day_of_month_display }}
                 {% endif %}
 
+            <hr>
+            <div>Aktiv: {{ habit.is_active }}</div>
+            <div>{{ habit.get_direction }}</div>
+            <div>Link: <a href="{{ habit.link }}">{{ habit.link }}</a></div>
+
+            <hr>
                 <div>Reihe: {{ object.current_streak }}</div>
                 <div>Gesamt: {{ object.total_done }}</div>
                 <div>Längste Reihe: {{ object.highest_streak }}</div>
+                <div>Last Event: {{ object.last_day }} ({{ object.get_last_day_action_display }})</div>
+                <div>Gesamt Done: {{ habit.total_done }}</div>
+                <div>Gesamt Skiped: {{ habit.total_canceled }}</div>
+                <div>Gesamt Failed: {{ habit.total_failed }}</div>
+                <div>Gesamt: {{ habit.total_counter }}</div>
 
+            <hr>
+            Privatsphäre
+                <br>
+                Wer kann diesen Eintrag sehen?
+                {{ habit.get_privacy_display }}
             <div>
 
             </div>
