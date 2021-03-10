@@ -7,7 +7,7 @@
 .color-code-7 {background-color: #33ac67 !important;}  /* Geselligkeit */
 .color-code-8 {background-color: rgb(241, 135, 64) !important;}  /* Perönlichkeit */
 
-.color-1 {background-color: #f03a47 !important;} /* Arbeit */
+.color-1 {background-color: rgba(245, 57, 37, 0.7) !important;} /* Arbeit */
 .color-2 {background-color: #f8e16c !important;} /* Finanzen */
 .color-3 {background-color: #ffc2b4 !important;}   /* Gesundheit */
 .color-4 {background-color: #00c49a !important;} /* Freizeit */
