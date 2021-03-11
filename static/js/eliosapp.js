@@ -39,14 +39,14 @@ function update_habit(data) {
     }
     if (data['last_day_action'] === 1) {
         btns[0].classList.remove("btn-outline-primary");
-        btns[0].classList.add("btn-primary");
+        btns[0].classList.add("btn-success");
     }
     if (data['last_day_action'] === 2) {
         btns[1].classList.remove("btn-outline-primary");
-        btns[1].classList.add("btn-primary");
+        btns[1].classList.add("btn-danger");
     }
     if (data['last_day_action'] === 3) {
         btns[2].classList.remove("btn-outline-primary");
-        btns[2].classList.add("btn-primary");
+        btns[2].classList.add("btn-secondary");
     }
 }
