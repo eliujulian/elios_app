@@ -39,7 +39,7 @@
                         </p>
                     {% endfor %}
 
-                <a href="{% url 'habit-create' %}">
+                <a href="{% url 'habit-create' %}?sphere={{ sphere_id }}">
                     <button class="btn btn-outline-primary">
                         Neue Gewohnheit
                     </button>

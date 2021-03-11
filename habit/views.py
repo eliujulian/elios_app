@@ -198,7 +198,12 @@ class HabitCreateView(PermissionRequiredMixin, CustomCreateView):
 
     def get_form_class(self):
         form = self.form_class
-        form.base_fields['goal'].limit_choices_to = {'created_by': self.request.user}
+        choices = dict()
+        choices['created_by'] = self.request.user
+        initals = self.get_initial()
+        if initals.get('sphere'):
+            choices['sphere'] = initals['sphere']
+        form.base_fields['goal'].limit_choices_to = choices
         return form
 
 
