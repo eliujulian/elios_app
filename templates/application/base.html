@@ -38,18 +38,22 @@
         {% for habit in user.habitprofile.get_habits_today %}
             <div class="card m-1" id="{{ habit.id_slug }}">
                 <div class="row g-0">
-                    <div class="col-md-3 color-{{ habit.sphere }}">
-                        <a style="color: black; text-decoration: None" href="{% url 'habit-detail' habit.id_slug %}">
+                    <div class="col-4 color-{{ habit.sphere }}">
+                        <a style="color: black; text-decoration: None" class="p-1" href="{% url 'habit-detail' habit.id_slug %}">
                             {{ habit.title }}
                         </a>
                     </div>
-                    <div class="col-md-1">
-                        Reihe: {{ habit.current_streak }}
+                    <div class="col-2" id="{{ habit.id_slug }}-current_streak">
+                        {% if habit.total_counter == 0 %}
+                            NEU
+                        {% else %}
+                            Reihe: {{ habit.current_streak }}
+                        {% endif %}
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-4">
                         <button
-                                class="btn btn-outline-primary btn-sm"
+                                class="btn btn-sm {% if not habit.open_today and habit.last_day_action == 1 %} btn-primary {% else %} btn-outline-primary {% endif %}"
                                 onclick="post_call(
                                     '{% url 'habit-event' habit.id_slug %}',
                                         {action: 'done', date: '{% now "Y-m-d" %}'},
@@ -60,7 +64,7 @@
                             done
                         </button>
                         <button
-                            class="btn btn-sm btn-outline-primary"
+                                class="btn btn-sm {% if not habit.open_today and habit.last_day_action == 2 %} btn-primary {% else %} btn-outline-primary {% endif %}"
                             {% if not habit.open_today %} disabled {% endif %}
                             onclick="post_call(
                                 '{% url 'habit-event' habit.id_slug %}',
@@ -71,7 +75,7 @@
                            fail
                         </button>
                         <button
-                            class="btn btn-sm btn-outline-primary"
+                                class="btn btn-sm {% if not habit.open_today and habit.last_day_action == 3 %} btn-primary {% else %} btn-outline-primary {% endif %}"
                             {% if not habit.open_today %} disabled {% endif %}
                             onclick="post_call(
                                 '{% url 'habit-event' habit.id_slug %}',
@@ -83,7 +87,7 @@
                         </button>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-2">
                         {% if habit.link %}<a href="{{ habit.link }}">link</a>{% endif %}
                     </div>
 
