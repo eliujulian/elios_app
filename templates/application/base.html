@@ -53,6 +53,7 @@
                     <div class="col-4 col-xl-2">
                         <button
                                 class="btn btn-sm {% if not habit.open_today and habit.last_day_action == 1 %} btn-success {% else %} btn-outline-primary {% endif %}"
+                                style="margin-left: 5px"
                                 onclick="post_call(
                                     '{% url 'habit-event' habit.id_slug %}',
                                         {action: 'done', date: '{% now "Y-m-d" %}'},
@@ -160,8 +161,12 @@
 
         {% endif %}
 
-            <hr>
-            <div class="row">
+
+        </div>
+    {% endblock content %}
+
+        <div class="container">
+            <div class="row mt-3">
             <div class="col-2">
                 <strong>Allgemein</strong><br>
                 <hr>
@@ -218,10 +223,9 @@
                 </div>
             {% endif %}
 
-        </div>
+            </div>
 
         </div>
-    {% endblock content %}
 
 
 {% csrf_token %}
