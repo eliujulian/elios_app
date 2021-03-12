@@ -40,7 +40,7 @@
         {% for habit in user.habitprofile.get_habits_today %}
             <div class="card m-1" id="{{ habit.id_slug }}">
                 <div class="row g-0">
-                    <div class="col-4 color-{{ habit.sphere }}">
+                    <div class="col-6 col-xl-3 color-{{ habit.sphere }}">
                         <a style="color: black; text-decoration: None" class="p-1" href="{% url 'habit-detail' habit.id_slug %}">
                             {{ habit.title }}
                         </a>
@@ -48,17 +48,9 @@
                         {% if habit.link %}<a href="{{ habit.link }}">
                             <i class="fas fa-link float-end" style="margin: 5px"></i>
                         </a>{% endif %}
-
-                    </div>
-                    <div class="col-2" id="{{ habit.id_slug }}-current_streak">
-                        {% if habit.total_counter == 0 %}
-                            NEU
-                        {% else %}
-                            Reihe: {{ habit.current_streak }}
-                        {% endif %}
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-4 col-xl-2">
                         <button
                                 class="btn btn-sm {% if not habit.open_today and habit.last_day_action == 1 %} btn-success {% else %} btn-outline-primary {% endif %}"
                                 onclick="post_call(
@@ -93,6 +85,15 @@
                            skip
                         </button>
                     </div>
+
+                    <div class="col-2 col-xl-2" id="{{ habit.id_slug }}-current_streak">
+                        {% if habit.total_counter == 0 %}
+                            NEU
+                        {% else %}
+                            Reihe: {{ habit.current_streak }}
+                        {% endif %}
+                    </div>
+
 
                 </div>
             </div>
