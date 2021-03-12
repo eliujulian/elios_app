@@ -17,11 +17,13 @@
 </head>
 <body>
 
+<!--
 <div class="container-fluid">
     <div class="btn-group" role="group">
         <a href="{% url 'landingpage' %}"><button type="button" class="btn btn-primary">Home</button></a>
     </div>
 </div>
+-->
 
 <div class="container">
 
@@ -42,6 +44,11 @@
                         <a style="color: black; text-decoration: None" class="p-1" href="{% url 'habit-detail' habit.id_slug %}">
                             {{ habit.title }}
                         </a>
+
+                        {% if habit.link %}<a href="{{ habit.link }}">
+                            <i class="fas fa-link float-end" style="margin: 5px"></i>
+                        </a>{% endif %}
+
                     </div>
                     <div class="col-2" id="{{ habit.id_slug }}-current_streak">
                         {% if habit.total_counter == 0 %}
@@ -85,10 +92,6 @@
                         >
                            skip
                         </button>
-                    </div>
-
-                    <div class="col-2">
-                        {% if habit.link %}<a href="{{ habit.link }}">link</a>{% endif %}
                     </div>
 
                 </div>
@@ -159,8 +162,9 @@
             <hr>
             <div class="row">
             <div class="col-2">
-                <strong>Einstellungen</strong><br>
+                <strong>Allgemein</strong><br>
                 <hr>
+                <a href="{% url 'landingpage' %}">Home</a><br>
                 <a href="{% url 'account-detail' %}">Account</a><br>
             </div>
             {% if perms.health.health_app %}
