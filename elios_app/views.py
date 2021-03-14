@@ -52,6 +52,12 @@ def test_view(request):
     context['user'] = request.user
     context['data'] = f"You are logged in as {request.user} ({request.user.username})."
     context['yesterday'] = timezone.now().date() - datetime.timedelta(days=1)
+    context['today'] = timezone.now().date()
+
+    if request.user.habitprofile.get_habits_yesterday().count():
+        context['day'] = context['yesterday']
+    else:
+        context['day'] = context['today']
 
     if request.method != "GET":
         return HttpResponseNotAllowed("get")
