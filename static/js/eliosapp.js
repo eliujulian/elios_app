@@ -6,7 +6,12 @@ function post_call(url, data, callback) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             data = JSON.parse(xhr.responseText);
-            if (callback) {callback(data);}
+            if (data['reload']) {
+                window.location.reload();
+            }
+            else {
+                if (callback) {callback(data);}
+            }
         }
     };
 
