@@ -1,9 +1,9 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 from core.views import CustomDetailView, CustomUpdateView, CustomCreateView, CustomDeleteView, CustomListView, \
     TemplateView
 from habit.forms import *
@@ -173,6 +173,9 @@ def habit_event_view(request, slug):
         instance.mark_as_failed(date)
     elif action == "cancel":
         instance.mark_as_canceled(date)
+
+    if date < datetime.date.today():
+        return JsonResponse(data={'reload': True})
 
     return JsonResponse(data=instance.serialize())
 

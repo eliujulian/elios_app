@@ -193,10 +193,7 @@ class Habit(AbstractBaseModel):
     def open_today(self):
         today = timezone.now().date()
         if self.last_day < today:
-            if self.open_yesterday():
-                return False
-            else:
-                return True
+            return True
         else:
             return False
 
