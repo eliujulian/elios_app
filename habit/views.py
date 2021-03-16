@@ -215,5 +215,8 @@ class HabitDeleteView(PermissionRequiredMixin, CustomDeleteView):
     permission_required = perm
     slug_field = 'id_slug'
 
+    def get_success_url(self):
+        return reverse('landingpage')
+
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, created_by=self.request.user, id_slug=self.kwargs['slug'])

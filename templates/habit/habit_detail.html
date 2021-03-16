@@ -30,6 +30,12 @@
             <div>Aktiv: {{ habit.is_active }}</div>
             <div>{{ habit.get_direction }}</div>
             <div>Link: <a href="{{ habit.link }}">{{ habit.link }}</a></div>
+            {% if habit.goal %}
+            <div>
+                {% url 'goal-detail' habit.goal.id_slug as goal_url %}
+                Ziel: <a href="{{ goal_url }}">{{ habit.goal }}</a>
+            </div>
+            {% endif %}
 
             <hr>
                 <div>Reihe: {{ object.current_streak }}</div>

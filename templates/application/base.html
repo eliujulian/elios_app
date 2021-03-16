@@ -33,16 +33,18 @@
         <hr>
         <h3>Habit Checklist</h3>
 
-        {% for habit in user.habitprofile.get_habits_today %}
-            {% include 'habit/elements/habit.html' %}
-        {% endfor %}
-
         {% if user.habitprofile.yesterday_open_items %}
             offene Checkliste von gestern vorhanden - bitte zuerst vervollständigen.
 
         {% for habit in user.habitprofile.get_habits_yesterday %}
             {% include 'habit/elements/habit.html' %}
         {% endfor %}
+
+        {% else %}
+
+            {% for habit in user.habitprofile.get_habits_today %}
+                {% include 'habit/elements/habit.html' %}
+            {% endfor %}
 
         {% endif %}
 
